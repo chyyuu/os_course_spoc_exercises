@@ -7,7 +7,7 @@
 分析你所认识的操作系统（Windows、Linux、FreeBSD、Android、iOS）所具有的独特和共性的功能？
 - [x]  
 
-> Windows: 蓝屏 Linux: 
+> Windows: 蓝屏 Linux: 内核比较轻量, 内核模块化, 开源 FreeBSD: 比较轻量的linux发行版, 常见于服务器, Android: 开源, iOS: 用户体验较好, 封闭性较高, 共性: 它们都是应用和硬件的中间层, 使得应用可以硬件无关地调用硬件资源。
 
 请总结你认为操作系统应该具有的特征有什么？并对其特征进行简要阐述。
 - [x]  

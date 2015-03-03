@@ -7,22 +7,23 @@
 分析你所认识的操作系统（Windows、Linux、FreeBSD、Android、iOS）所具有的独特和共性的功能？
 - [x]  
 
->  
+>  5个OS中只有FreeBSD没有遇到过, 听过Windows和Linux的存储方式不同,windows是char型是little endian而int,long是用big endian
+但是在linux是全都用big endian.
 
 请总结你认为操作系统应该具有的特征有什么？并对其特征进行简要阐述。
 - [x]  
 
->   
+> 能够减少与电脑系统的I/O间的时间, 使电脑能够用得更有效率.
 
 请给出你觉得的更准确的操作系统的定义？
 - [x]  
 
->   
+> 为了更方便地试用电脑系统的软件, 能够控制程序的输入输出, debug, compile, 记忆能力, 管理data等提供功能.
 
 你希望从操作系统课学到什么知识？
 - [x]  
 
->   
+> 希望对OS了解, 获得关于信息保护的原理, 各种OS的结构
 
 ---
 

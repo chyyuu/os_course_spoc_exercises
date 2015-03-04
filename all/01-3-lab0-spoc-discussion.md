@@ -8,6 +8,7 @@
 - [x]  
 
 >  http://www.imada.sdu.dk/Courses/DM18/Litteratur/IntelnATT.htm
+>  能够读懂
 
 虽然学过计算机原理和x86汇编（根据THU-CS的课程设置），但对ucore中涉及的哪些硬件设计或功能细节不够了解？
 - [x]  
@@ -18,7 +19,7 @@
 哪些困难（请分优先级）会阻碍你自主完成lab实验？
 - [x]  
 
->   
+>   对代码框架不理解、时间不够
 
 如何把一个在gdb中或执行过程中出现的物理/线性地址与你写的代码源码位置对应起来？
 - [x]  
@@ -44,17 +45,18 @@
 搭建好实验环境，请描述碰到的困难和解决的过程。
 - [x]  
 
-> 
+> 尝试在MAC中搭建实验环境，未果，遂决定用virtual box。
+> 衷心希望能有OSX的实验框架体系。
 
 熟悉基本的git命令行操作命令，从github上的[ucore git repo](http://www.github.com/chyyuu/ucore_lab)下载ucore lab实验
 - [x]  
 
-> 
+> 已完成
 
 尝试用qemu+gdb（or ECLIPSE-CDT）调试lab1
 - [x]  
 
-> 
+> 已完成
 
 对于如下的代码段，请说明”：“后面的数字是什么含义
 ```
@@ -73,7 +75,7 @@ struct gatedesc {
 ```
 - [x]  
 
-> 
+> 指定位域的宽度，单位为bit
 
 对于如下的代码段，
 ```
@@ -98,12 +100,34 @@ SETGATE(intr, 0,1,2,3);
 请问执行上述指令后， intr的值是多少？
 - [x]  
 
-> 
+> 261683767476226
 
 请分析 [list.h](https://github.com/chyyuu/ucore_lab/blob/master/labcodes/lab2/libs/list.h)内容中大致的含义，并能include这个文件，利用其结构和功能编写一个数据结构链表操作的小C程序
 - [x]  
 
-> 
+  #include <list.h>
+  #include <stdio.h>
+
+  typedef struct {
+     list_entry_t free_list;
+     unsigned int nr_free;
+   }free_area_t;
+
+   struct page {
+
+     int test;
+     list_entry_t page_link;
+  };
+
+   int main(){
+      
+      free_area_t free_area;
+      list_entry_t* le = &free_area.free_list;
+      while ( (le = list_next(le)) != free_area.free_list ) {
+          printf ( "%s", "not empty" );
+       }
+       return 0;
+   }
 
 ---
 

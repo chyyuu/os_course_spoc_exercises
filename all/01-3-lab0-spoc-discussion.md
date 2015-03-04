@@ -7,33 +7,33 @@
 能否读懂ucore中的AT&T格式的X86-32汇编语言？请列出你不理解的汇编语言。
 - [x]  
 
->  http://www.imada.sdu.dk/Courses/DM18/Litteratur/IntelnATT.htm
+>  http://www.imada.sdu.dk/Courses/DM18/Litteratur/IntelnATT.htm，上过相关课程，理解不太困难
 
 虽然学过计算机原理和x86汇编（根据THU-CS的课程设置），但对ucore中涉及的哪些硬件设计或功能细节不够了解？
 - [x]  
 
->   
+>   虚存管理，c语言1中一些特殊的语法
 
 
 哪些困难（请分优先级）会阻碍你自主完成lab实验？
 - [x]  
 
->   
+>   其他课程的大作业
 
 如何把一个在gdb中或执行过程中出现的物理/线性地址与你写的代码源码位置对应起来？
 - [x]  
 
->   
+>   使用list命令
 
 了解函数调用栈对lab实验有何帮助？
 - [x]  
 
->   
+>   对函数调用有更深刻的理解
 
 你希望从lab中学到什么知识？
 - [x]  
 
->   
+>   增强代码能力和对C语言的理解与使用
 
 ---
 

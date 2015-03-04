@@ -30,7 +30,7 @@
 了解函数调用栈对lab实验有何帮助？
 - [x]  
 
->   我还不知道lab实验的具体内容。
+>   我还不知道lab实验的具体内容。但我猜测可能对理解操作系统的完全性有帮助。
 
 你希望从lab中学到什么知识？
 - [x]  
@@ -100,12 +100,34 @@ SETGATE(intr, 0,1,2,3);
 请问执行上述指令后， intr的值是多少？
 - [x]  
 
-> 
+> 65538
 
 请分析 [list.h](https://github.com/chyyuu/ucore_lab/blob/master/labcodes/lab2/libs/list.h)内容中大致的含义，并能include这个文件，利用其结构和功能编写一个数据结构链表操作的小C程序
 - [x]  
 
-> 
+> list.h是一个双向链表的头文件，它的每个节点都有一个前向指针和一个后向指针，其中还定义并实现了增、删、查等功能。
+下面一段代码简单使用了其中的初始化和增加节点、查看节点的功能。首先构造5个节点，依次连接，最后检查尾节点的前一个是否正确。
+#include<iostream>
+#include "list.h"
+using namespace std;
+int main()
+{
+    //构造节点 
+     list_entry_t* elm0=new list_entry_t;
+     list_entry_t* elm1=new list_entry_t;
+     list_entry_t* elm2=new list_entry_t;
+     list_entry_t* elm3=new list_entry_t;
+     list_entry_t* elm4=new list_entry_t;
+     //构造链表 
+     list_init(elm0);
+     list_add(elm0, elm1);
+     list_add(elm1, elm2);
+     list_add(elm2, elm3);
+     list_add(elm3, elm4);
+     //检验结果 
+     cout<<list_prev(elm4)<<' '<<elm3;
+     return 0;   
+}    
 
 ---
 

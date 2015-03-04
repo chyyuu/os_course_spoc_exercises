@@ -106,11 +106,11 @@ SETGATE(intr, 0,1,2,3);
 
 > list.h这个文件构建了一个双向循环链表结构并规定了它的一些基本操作，比如初始化、往前插入、往后插入、删除等。
   程序如下：
+  ```
   #include "list.h"
   #include <cstdlib>
   #include <iostream>
   using namespace std;
-
   int main()
   {
       list_entry_t* elm1 = new list_entry_t;
@@ -123,6 +123,7 @@ SETGATE(intr, 0,1,2,3);
       list_del(elm2);
       cout << "elm3's next: " << elm3->next << ", and elm1: " << elm1 << endl;
   }
+  ```
   程序的预期结果应该为：第一次输出的elm3->next和elm2相等，第二次输出的elm3->next和elm1相等。
   实际结果如下：
   elm3's next: 0x100105530, and elm2: 0x100105530

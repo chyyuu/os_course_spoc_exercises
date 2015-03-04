@@ -107,7 +107,7 @@ SETGATE(intr, 0,1,2,3);
 
 > list.h是一个双向链表的头文件，它的每个节点都有一个前向指针和一个后向指针，其中还定义并实现了增、删、查等功能。
 下面一段代码简单使用了其中的初始化和增加节点、查看节点的功能。首先构造5个节点，依次连接，最后检查尾节点的前一个是否正确。
-'''
+```
 #include<iostream>
 #include "list.h"
 using namespace std;
@@ -129,7 +129,7 @@ int main()
      cout<<list_prev(elm4)<<' '<<elm3;
      return 0;   
 }    
-'''
+```
 ---
 
 ## 开放思考题

@@ -18,8 +18,8 @@
 - [x]  
 
 > 中断的作用：处理异常；及时响应重要事务，如键盘输入等；系统调用。
-> 利：如上，能够有效利用
-> 弊：打断运行程序，性能会在某种意义上有所下降  
+> 利：如上，提高交互性，缩短延迟时间。
+> 弊：打断运行程序，可能减少吞吐量，性能会在某种意义上有所下降。  
 
 哪些困难（请分优先级）会阻碍你自主完成lab实验？
 - [x]  
@@ -31,7 +31,7 @@
 如何把一个在gdb中或执行过程中出现的物理/线性地址与你写的代码源码位置对应起来？
 - [x]  
 
->   
+> 没懂什么意思。  
 
 了解函数调用栈对lab实验有何帮助？
 - [x]  
@@ -114,8 +114,29 @@ SETGATE(intr, 0,1,2,3);
 请分析 [list.h](https://github.com/chyyuu/ucore_lab/blob/master/labcodes/lab2/libs/list.h)内容中大致的含义，并能include这个文件，利用其结构和功能编写一个数据结构链表操作的小C程序
 - [x]  
 
-> 
+> 不过编译没通过。
 
+```
+#include "list.h"
+
+int main() {
+  list_entry_t tmp;
+  list_entry_t* mlist = &tmp;
+  list_init(mlist);
+  //printf("%d\n", list_empty(mlist));
+  list_entry_t ele1, ele2, ele3, ele4, ele5, ele6;
+  list_entry_t *mele1 = &ele1, *mele2 = &ele2, *mele3 = &ele3, *mele4 = &ele4, *mele5 = &ele5, *mele6 = &ele6;
+  list_add(mlist, mele1);
+  list_add_before(mlist, mele2);
+  list_add_after(mlist, mele3);
+  __list_add(mele4, mele1, mele3);
+  list_del(list_next(ele1));
+  if (!list_empty(mlist)) 
+    list_del_init(list_prev(mlist));
+  __list_del(list_next(mlist), list_prev(mlist));
+  return 0; 
+}
+```
 
 
 ---

@@ -53,19 +53,19 @@ mov     eax, dword ptr [ebx]
 搭建好实验环境，请描述碰到的困难和解决的过程。
 - [x]  
 
-> 
+> 一开始在Linux系统下配置环境，难度较大，最后放弃了；然后在windows下安装Linux的虚拟机，总是会安装失败。解决方法是重新下载安装包再安装，就好了
 
 熟悉基本的git命令行操作命令，从github上
 的 http://www.github.com/chyyuu/ucore_lab 下载
 ucore lab实验
 - [x]  
 
-> 
+> clone 仓库 gitclone http://www.github.com/chyyuu/ucore_lab
 
 尝试用qemu+gdb（or ECLIPSE-CDT）调试lab1
 - [x]   
 
-> 
+> 清除文件夹：make clean 编译lab1：make 调出debug命令行：make debug
 
 对于如下的代码段，请说明”：“后面的数字是什么含义
 ```

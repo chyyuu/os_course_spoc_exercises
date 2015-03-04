@@ -8,32 +8,41 @@
 - [x]  
 
 >  http://www.imada.sdu.dk/Courses/DM18/Litteratur/IntelnATT.htm
+lea     eax,[ebx+ecx]   
+leal    (%ebx,%ecx),%eax
+instr   %segreg:disp(base,index,scale),foo
+instr   foo,segreg:[base+index*scale+disp]
+mov     eax, dword ptr [ebx]
 
 虽然学过计算机原理和x86汇编（根据THU-CS的课程设置），但对ucore中涉及的哪些硬件设计或功能细节不够了解？
 - [x]  
 
->   
+>   中断处理机制
+    分段机制的存储管理
+
 
 
 哪些困难（请分优先级）会阻碍你自主完成lab实验？
 - [x]  
 
->   
+>   环境的配置对我来说比较难，
+    以及代码阅读
 
 如何把一个在gdb中或执行过程中出现的物理/线性地址与你写的代码源码位置对应起来？
 - [x]  
 
->   
+>   段机制启动页机制不启动，段机制中出现的物理地址就是线性地址，
+    如果都启动，段机制启动出现的是物理地址，页机制出现的是线性地址。
 
 了解函数调用栈对lab实验有何帮助？
 - [x]  
 
->   
+>   可以知道函数调用细节
 
 你希望从lab中学到什么知识？
 - [x]  
 
->   
+>   内存管理，进程切换，系统调用
 
 ---
 

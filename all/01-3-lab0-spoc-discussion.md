@@ -28,7 +28,8 @@
 如何把一个在gdb中或执行过程中出现的物理/线性地址与你写的代码源码位置对应起来？
 - 
 
->
+> 物理地址, 虚拟地址(内存地址) 对应起来.
+
 了解函数调用栈对lab实验有何帮助？
 - 
 
@@ -54,6 +55,7 @@
 -   
 
 >  用git clone, 把 clone后写ucore_lab的网站
+ex: git clone http://github.com/chyyuu/ucore_lab
 
 尝试用qemu+gdb（or ECLIPSE-CDT）调试lab1
 -  

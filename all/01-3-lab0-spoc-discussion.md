@@ -5,34 +5,35 @@
 ---
 
 能否读懂ucore中的AT&T格式的X86-32汇编语言？请列出你不理解的汇编语言。
-- [x]  
+- [x] 能读懂 
 
 >  http://www.imada.sdu.dk/Courses/DM18/Litteratur/IntelnATT.htm
 
 虽然学过计算机原理和x86汇编（根据THU-CS的课程设置），但对ucore中涉及的哪些硬件设计或功能细节不够了解？
-- [x]  
+- [x]  指令和数据的储存方式（在同一片ram还是储存在不同的ram中）
 
 >   
 
 
 哪些困难（请分优先级）会阻碍你自主完成lab实验？
-- [x]  
+- [x]  对操作系统工作原理的理解程度；
+对代码的理解程度；
 
 >   
 
 如何把一个在gdb中或执行过程中出现的物理/线性地址与你写的代码源码位置对应起来？
-- [x]  
+- [x]  gdb中或执行过程中出现的物理/线性地址等于汇编代码中第一条代码的地址加上源码位置的偏差。
 
 >   
 
 了解函数调用栈对lab实验有何帮助？
-- [x]  
+- [x]  可以帮助我们更好地理解函数调用的工程，深入了解操作系统工作的原理。
 
 >   
 
 你希望从lab中学到什么知识？
-- [x]  
-
+- [x]  操作系统的工作原理；
+读和写大量代码的经验和感悟
 >   
 
 ---
@@ -43,7 +44,8 @@
 
 搭建好实验环境，请描述碰到的困难和解决的过程。
 - [x]  
-
+刚开始时没有看github上面的指导，自己配置qemu的时候出了很多问题，比如说在shell输入qemu的时候提示说没有找到qemu
+但qemu在xxx软件包中等等。后来我浏览了github，然后发现有搭建环境的指导，顺利解决了环境搭建的问题。
 > 
 
 熟悉基本的git命令行操作命令，从github上
@@ -74,7 +76,7 @@ struct gatedesc {
 };
 ```
 
-- [x]  
+- [x]  :后面的数字表示位宽。
 
 > 
 
@@ -101,12 +103,44 @@ SETGATE(intr, 0,1,2,3);
 ```
 请问执行上述指令后， intr的值是多少？
 
-- [x]  
+- [x]  10002
 
 > 
 
 请分析 [list.h](https://github.com/chyyuu/ucore_lab/blob/master/labcodes/lab2/libs/list.h)内容中大致的含义，并能include这个文件，利用其结构和功能编写一个数据结构链表操作的小C程序
-- [x]  
+- [x]  #include "list.h"
+#include <stdio.h>
+
+#define getNode(le,member) to_struct((le),struct List,member)
+
+struct List{
+	unsigned int data;
+	list_entry_t next;
+};
+int main()
+{
+	struct List listhead;
+	struct List listnext[10];
+	struct List listtail;
+	listhead.data = 0;
+	listtail.data = 100;
+	list_entry_t *head = &listhead.next;
+	list_entry_t *tail = &listtail.next;
+	head->next = tail;
+	head->prev = head;
+	tail->next = NULL;
+	tail->prev = head;
+	int i = 0;
+	for(;i < 10; i++)listnext[i].data = i + 1;
+	list_add(&listhead.next,&listnext[0].next);
+	list_add_after(&listhead.next,&listnext[2].next);
+	list_add_before(&listtail.next,&listnext[6].next);
+	list_entry_t *le = &listhead.next;
+	while((le = list_next(le)) != NULL){
+		struct List *node = getNode(le,next);
+		printf("%d\n",node->data);
+	}
+}
 
 > 
 

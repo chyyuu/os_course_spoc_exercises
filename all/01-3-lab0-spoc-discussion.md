@@ -110,6 +110,7 @@ SETGATE(intr, 0,1,2,3);
 - [x]  
 
 > list.h定义了一个简单的链表结构。向链表中插入一个元素：
+```
 #include "list.h"
 int main() {
 list_entry_t* head, tmp;
@@ -117,6 +118,7 @@ list_init(head);
 list_add(head, tmp);
 return 0;
 }
+```
 
 ---
 

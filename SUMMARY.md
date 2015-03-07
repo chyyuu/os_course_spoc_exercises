@@ -4,6 +4,7 @@
 * [Intro](all/1-intro.md)
     * [问卷](all/01-1-questionnaire.md)
     * [lec0 SPOC讨论](all/01-2-spoc-discussion.md)
+    * [lab0 在线练习](all/01-3-lab0-quiz.md)
     * [lab0 SPOC讨论](all/01-3-lab0-spoc-discussion.md)
 * [中断、异常和系统调用](all/2-intr.md)
     * [lab1 SPOC讨论](all/02-2-lab1-spoc-discussion.md)

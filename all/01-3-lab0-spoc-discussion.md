@@ -108,10 +108,10 @@ SETGATE(intr, 0,1,2,3);
 
 > 是一个双向链表的简单实现，而且还有各种操作接口。编写的程序如下：
 
-  #include <stdio.h>
-  #include "list.h"
-
-  int main(int argc, char *argv[])
+  #include <stdio.h>\n
+  #include "list.h"\n
+\n
+  int main(int argc, char *argv[])\n
   {
       list_entry_t le0, le1, le2, le3;
       list_init(&le0);

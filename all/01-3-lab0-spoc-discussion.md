@@ -132,6 +132,7 @@ SETGATE(intr, 0,1,2,3);
       printf("%d %d %d\n", le0.prev, le0.next, &le0);
       printf("%d %d %d\n", le2.prev, le2.next, &le2);
       printf("%d %d %d\n", le3.prev, le3.next, &le3);
+      return 0;
   }
 ```
 ---

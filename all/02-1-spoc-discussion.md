@@ -74,7 +74,44 @@ sys_dup,
  
 ## 3.4 linux系统调用分析
  1. 通过分析[lab1_ex0](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex0.md)了解Linux应用的系统调用编写和含义。(w2l1)
- 
+
+file 是检测文件类型的命令，可以查看文件的类型和组织方式的信息
+执行命令 file lab1-ex0.exe 可看到打印出的内容为：
+lab1-ex0.exe: ELF 64-bit LSB  executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.24, BuildID[sha1]=893580e2a35a7a0f4175444a439d85c84961f263, not stripped
+可看出lab1-ex0.exe是ELF的文件格式，64为的可执行文件，动态链接库等等信息
+
+nm命令用于显示关于对象文件、可执行文件以及对象文件库里的符号信息
+一些常用的参数如下：
+1、"-A"，列出符号名的时候同时显示来自于哪个文件。
+
+这在同时列出多个文件（比如一个链接库）的符号时比较有用
+2、"-a"，列出所有符号
+
+这将会把调试符号也列出来。默认状态下调试符号不会被列出。
+3、"-l"，列出符号在源代码中对应的行号
+
+指定这个参数后，nm将利用调试信息找出文件名以及符号的行号。对于一个已定义符号，将会找出这个符号定义的行号，对于未定义符号,显示为空
+4、"-n"，根据符号的地址来排序
+
+默认是按符号名称的字母顺序排序的
+5、"-u"，只列出未定义符号
+
+例如执行命令  nm -l lab1-ex0.exe
+可看到打印出相应的符号信息：
+000000000000000b a SYS_execve
+0000000000000001 a SYS_exit
+0000000000000002 a SYS_fork
+0000000000000013 a SYS_lseek
+000000000000005a a SYS_mmap
+000000000000005b a SYS_munmap
+0000000000000005 a SYS_open
+0000000000000066 a SYS_socketcal
+等 a表示这是 	Local absolute 符号。同时还可看到在lab1-ex0.s中的符号main
+0000000000601045 D main	/home/yxy/ucore_lab/related_info/lab1/lab1-ex0.s:8
+显示是在元文件的第八行
+
+
+
 
  ```
   + 采分点：说明了objdump，nm，file的大致用途，说明了系统调用的具体含义

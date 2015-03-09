@@ -21,7 +21,7 @@
     系统状态设置和内核数据读取：设置系统状态，开关内核服务等
     进程管理
     细分的话，可以分为如下几类：
-    1 进程控制 for,kclone,exit等 /n
+    1 进程控制 for,kclone,exit等
     2 文件操作 open close read等
     3 文件系统操作 stat chown等
     4 系统控制 ioctl iopl等
@@ -39,7 +39,31 @@
  ```
  
  1. 以ucore lab8的answer为例，uCore的系统调用有哪些？大致的功能分类有哪些？(w2l1)
- 
+ 在lab8/kern/syscall里可以看到，一共有22个系统调用，如下：
+sys_exit,
+sys_fork,
+sys_wait,
+sys_exec,
+sys_yield,
+sys_kill,
+sys_getpid,
+sys_putc,
+sys_pgdir,
+sys_gettime,
+sys_lab6_set_priority,
+sys_sleep,
+sys_open,
+sys_close,
+sys_read,
+sys_write,
+sys_seek,
+sys_fstat,
+sys_fsync,
+sys_getcwd,
+sys_getdirentry,
+sys_dup,
+分类大致也就是文件操作，进程管理，内存管理这些
+
  ```
   + 采分点：说明了ucore的大致数量（二十几个），说明了ucore系统调用的主要分类（文件操作，进程管理，内存管理等）
   - 答案没有涉及上述两个要点；（0分）

@@ -27,7 +27,8 @@
  ```
  
  1. 以ucore lab8的answer为例，uCore的系统调用有哪些？大致的功能分类有哪些？(w2l1)
- >  ucore的系统调用大约22个，大致分为进程控制（sys_fork、sys_exit等）、文件系统控制（sys_fsync、sys_fstat等）和系统控制（sys_gettime等）等。
+
+>  ucore的系统调用大约22个，大致分为进程控制（sys_fork、sys_exit等）、文件系统控制（sys_fsync、sys_fstat等）和系统控制（sys_gettime等）等。
  
  ```
   + 采分点：说明了ucore的大致数量（二十几个），说明了ucore系统调用的主要分类（文件操作，进程管理，内存管理等）
@@ -39,7 +40,7 @@
  
 ## 3.4 linux系统调用分析
  1. 通过分析[lab1_ex0](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex0.md)了解Linux应用的系统调用编写和含义。(w2l1)
- 
+
 >  file用途为检测文件类型，对所得exe文件应用file命令获得：l1e0: ELF 64-bit LSB  executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.24, BuildID[sha1]=d1c9294b45dbb8faf13e3db2d50aac427cafaad6, not stripped
 >  nm命令用于显示关于对象文件、可执行文件以及对象文件库里的符号信息。对所得exe文件应用nm命令获得部分结果如下：
 >  0000000000000002 a AF_INET
@@ -58,6 +59,7 @@
  ```
  
  1. 通过调试[lab1_ex1](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex1.md)了解Linux应用的系统调用执行过程。(w2l1)
+
 >  strace常用来跟踪进程执行时的系统调用和所接收的信号，包括参数、返回值、执行消耗的时间等。根据参数不同可以完成不同的功能。如题中所用参数-c即为统计每一系统调用的执行时间、调用次数和出错次数等。
 >  应用触发系统调用的时候，首先将系统调用号填充到寄存器eax中，若有其他所需的参数也填入到相应的寄存器中，然后利用软中断命令int 0x80使系统切换到内核态并执行系统调用处理程序system_call()，其与硬件结构紧密相关，通常在entry.s文件中通过汇编语言编写。然后system_call()对eax中获取的系统调用号进行有效性检查，验证其有效后，利用这个调用号从存储了所有注册过的系统调用的列表sys_call_table中获取到对应的系统调用：以sys_call_table()为基址，加上%eax*4（列表中每个表项占用4字节）即获得了所需系统调用所在位置。
 

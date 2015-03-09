@@ -41,14 +41,11 @@
  1. 通过分析[lab1_ex0](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex0.md)了解Linux应用的系统调用编写和含义。(w2l1)
  
 >  file用途为检测文件类型，对所得exe文件应用file命令获得：l1e0: ELF 64-bit LSB  executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.24, BuildID[sha1]=d1c9294b45dbb8faf13e3db2d50aac427cafaad6, not stripped
-
 >  nm命令用于显示关于对象文件、可执行文件以及对象文件库里的符号信息。对所得exe文件应用nm命令获得部分结果如下：
 >  0000000000000002 a AF_INET
 >  000000000060105c B __bss_start
 >  000000000060105c b completed.6972
-
 >  objdump用来显示一个或者多个目标文件的信息。使用选项控制具体显示哪些信息，例如-d可对文件进行反汇编。
-
 >  Linux的系统调用需要首先根据请求的服务不同初始化各项参数，例如lab1-ex0.s中，将寄存器eax设为SYS_write，ebx设为STDOUT等，然后利用int 0x80命令中断来进行系统调用，完成所需的服务提供。
 
  ```

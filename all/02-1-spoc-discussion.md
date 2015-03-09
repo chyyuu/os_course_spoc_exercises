@@ -21,7 +21,7 @@
     系统状态设置和内核数据读取：设置系统状态，开关内核服务等
     进程管理
     细分的话，可以分为如下几类：
-    1 进程控制 for,kclone,exit等
+    1 进程控制 for,kclone,exit等 /n
     2 文件操作 open close read等
     3 文件系统操作 stat chown等
     4 系统控制 ioctl iopl等

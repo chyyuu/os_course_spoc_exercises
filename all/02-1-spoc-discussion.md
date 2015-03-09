@@ -130,7 +130,60 @@ objdump是反汇编命令，可对可执行文件进行反汇编
  ```
  
  1. 通过调试[lab1_ex1](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex1.md)了解Linux应用的系统调用执行过程。(w2l1)
- 
+strace命令用来跟踪进程执行时的系统调用和所接收的信号。常用参数有：
+-c 统计每一系统调用的所执行的时间,次数和出错的次数等. 
+-d 输出strace关于标准错误的调试信息. 
+-f 跟踪由fork调用所产生的子进程. 
+-ff 如果提供-o filename,则所有进程的跟踪结果输出到相应的filename.pid中,pid是各进程的进程号. 
+-F 尝试跟踪vfork调用.在-f时,vfork不被跟踪. 
+-h 输出简要的帮助信息. 
+-i 输出系统调用的入口指针. 
+-q 禁止输出关于脱离的消息. 
+-r 打印出相对时间关于,,每一个系统调用. 
+-t 在输出中的每一行前加上时间信息. 
+等等
+lab1-exe1.c的代码如下：
+#include <stdio.h>
+void main(void)
+{
+  printf("hello world\n");
+}
+
+是在C语言层面调用了库函数，打印除了hello world
+讲该代码汇编成.s文件，
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	$.LC0, %edi
+	call	puts
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	可看到其中调用了库函数puts
+	用strace -c ./lab1-ex1.exe 可看到
+	  9.96    0.000026          13         2           open
+  8.81    0.000023          23         1           write
+  4.60    0.000012           4         3           fstat
+  3.07    0.000008           8         1           execve
+可看出是库函数puts调用了系统调用write
+
+linux的系统调用执行过程简要如下：
+
+
+简单总结一下linux的系统调用过程：
+
+首先，用户程序里调用库函数(如上文提到的puts函数，当然应用程序也可直接调用系统调用)，库函数通过软中断指令INT 0x80进行系统调用，执行该指令时要先传递参数，在lab1-ex0.s 可看到
+movl	$SYS_write,%eax
+	movl	$STDOUT,%ebx
+	movl	$hello,%ecx
+	movl	$12,%edx
+	参数要先写到这几个寄存器中
+	跳转到内核态 ，systemcall，转到相应的系统调用服务例程，
+
+系统调用号存在eax寄存器中，systemcall将其取出，左移两位得到offset，加上基址就得到服务例程的入口地址，从而进行执行。
+
+
+
 
  ```
   + 采分点：说明了strace的大致用途，说明了系统调用的具体执行过程（包括应用，CPU硬件，操作系统的执行过程）

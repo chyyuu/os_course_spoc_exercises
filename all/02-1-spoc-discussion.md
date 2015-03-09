@@ -32,7 +32,7 @@ objdump可以用来反编译，nm可以用来列出目标文件的符号清单�
  
  1. 通过调试[lab1_ex1](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex1.md)了解Linux应用的系统调用执行过程。(w2l1)
  
-strace可以用来跟踪进程执行时的系统调用和所接收的信号。
+strace可以用来跟踪进程执行时的系统调用和所接收的信号。按照要求执行后，可以看到一个系统调用的列表，详细列出了这个hello world程序运行时的系统调用过程。
  
 ## 3.5 ucore系统调用分析
  1. ucore的系统调用中参数传递代码分析。

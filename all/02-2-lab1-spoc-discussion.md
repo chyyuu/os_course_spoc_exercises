@@ -39,11 +39,11 @@ lab1中printfmt函数用到了可变参，请参考写一个小的linux应用程
 #include <stdio.h>
 #include <stdarg.h>
 
-int min(int n, ...) {
+int min(int num, ...) {
     va_list list;
-    va_start(list, n);
+    va_start(list, num);
     int ans = 0x7fffffff;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < num; i++) {
         int tmp = va_arg(list, int);
         if (ans > tmp) ans = tmp;
     }
@@ -52,7 +52,7 @@ int min(int n, ...) {
 }
 
 int main() {
-    printf("%d\n", min(1, 2, 3, 4));
+    printf("%d\n", min(4, 1, 2, 3, 4));
     return 0;
 }
 ```

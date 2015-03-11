@@ -8,13 +8,18 @@
 - [x]  
 - 能够读懂：）
 
->  
+>  http://www.imada.sdu.dk/Courses/DM18/Litteratur/IntelnATT.htm
+>  inb一般应用程序用不到的指令等。
 
 虽然学过计算机原理和x86汇编（根据THU-CS的课程设置），但对ucore中涉及的哪些硬件设计或功能细节不够了解？
 - [x]  
 - 我觉得我对中断的控制还是不十分了解 希望继续进行深入学习
 
+<<<<<<< HEAD
 >   
+=======
+> 中断寄存器和非通用寄存器等。
+>>>>>>> 24f70cfb6a134251c8b733fa7b138f3923a52069
 
 
 哪些困难（请分优先级）会阻碍你自主完成lab实验？
@@ -28,13 +33,20 @@
 - [x]
 - 可以使用break命令，在指定的位置停下，gdb调试中可以显示对应的物理地址
 
->   
+> 1. 在gdb中通过break加行号得到物理地址，list加*物理地址得到行号。
+> 2. 用nm, objdump工具可以看到
 
 了解函数调用栈对lab实验有何帮助？
 - [x]  
 - 可以查看或修改相应位置上的数据内容，对调试有一定的帮助
 
+<<<<<<< HEAD
 >  
+=======
+> 除了错可以调试 
+> 对于函数的调用过程和程序的运行过程有更好的理解。
+> 便于调试以及检查。 
+>>>>>>> 24f70cfb6a134251c8b733fa7b138f3923a52069
 
 你希望从lab中学到什么知识？
 - [x]  
@@ -52,20 +64,54 @@
 - [x]  
 - 无困难
 
-> 
+> 困难：在virtualbox中设置虚拟机的时候找不到Linux的64位选项。
+> 解决：需要通过BIOS设置将电脑的虚拟化功能打开（本电脑LenovoY480的VT功能是锁的，需要打开）。
+> 开始时选择了UBUNTU 32位，不能启动，后来换成64位就能顺利运行
 
+<<<<<<< HEAD
 熟悉基本的git命令行操作命令，从github上的[ucore git repo](http://www.github.com/chyyuu/ucore_lab)下载ucore lab实验
+=======
+熟悉基本的git命令行操作命令，从github上
+的 http://www.github.com/chyyuu/ucore_lab 下载
+ucore lab实验
+>>>>>>> 24f70cfb6a134251c8b733fa7b138f3923a52069
 - [x]  
 - 完成
 
-> 
+> clone 仓库 
+> gitclone http://www.github.com/chyyuu/ucore_lab
 
 尝试用qemu+gdb（or ECLIPSE-CDT）调试lab1
+<<<<<<< HEAD
 - [x]  
 - 完成
+=======
+- [x]   
 
-> 
+> 清除文件夹：make clean 
+> 编译lab1：make 
+> 调出debug命令行：make debug
 
+对于如下的代码段，请说明”：“后面的数字是什么含义
+```
+ /* Gate descriptors for interrupts and traps */
+ struct gatedesc {
+    unsigned gd_off_15_0 : 16;        // low 16 bits of offset in segment
+    unsigned gd_ss : 16;            // segment selector
+    unsigned gd_args : 5;            // # args, 0 for interrupt/trap gates
+    unsigned gd_rsv1 : 3;            // reserved(should be zero I guess)
+    unsigned gd_type : 4;            // type(STS_{TG,IG32,TG32})
+    unsigned gd_s : 1;                // must be 0 (system)
+    unsigned gd_dpl : 2;            // descriptor(meaning new) privilege level
+    unsigned gd_p : 1;                // Present
+    unsigned gd_off_31_16 : 16;        // high bits of offset in segment
+ };
+ ```
+>>>>>>> 24f70cfb6a134251c8b733fa7b138f3923a52069
+
+- [x]  
+
+<<<<<<< HEAD
 对于如下的代码段，请说明”：“后面的数字是什么含义
 ```
 /* Gate descriptors for interrupts and traps */
@@ -85,6 +131,9 @@ struct gatedesc {
 - 位域
 
 >
+=======
+> 每一个filed(域，成员变量)在struct(结构)中所占的位数; 也称“位域”，用于表示这个成员变量占多少位(bit)。
+>>>>>>> 24f70cfb6a134251c8b733fa7b138f3923a52069
 
 对于如下的代码段，
 ```
@@ -107,6 +156,15 @@ intr=8;
 SETGATE(intr, 0,1,2,3);
 ```
 请问执行上述指令后， intr的值是多少？
+<<<<<<< HEAD
+=======
+
+- [x]  0x10002
+
+> https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab0/lab0_ex3.c
+
+请分析 [list.h](https://github.com/chyyuu/ucore_lab/blob/master/labcodes/lab2/libs/list.h)内容中大致的含义，并能include这个文件，利用其结构和功能编写一个数据结构链表操作的小C程序
+>>>>>>> 24f70cfb6a134251c8b733fa7b138f3923a52069
 - [x]  
 - 65538
 

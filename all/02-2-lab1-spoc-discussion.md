@@ -5,8 +5,9 @@
 NOTICE
 - 有"w2l2"标记的题是助教要提交到学堂在线上的。
 - 有"w2l2"和"spoc"标记的题是要求拿清华学分的同学要在实体课上完成，并按时提交到学生对应的git repo上。
-- 有"hard"标记的题有一定的难度，鼓励实现，在4月1日前完成即可。
-
+- 有"hard"标记的题有一定难度，鼓励实现。
+- 有"easy"标记的题很容易实现，鼓励实现。
+- 有"midd"标记的题是一般水平，鼓励实现。
 ---
 
 请描述ucore OS配置和驱动外设时钟的准备工作包括哪些步骤？ (w2l2)
@@ -61,11 +62,26 @@ lab1中printfmt函数用到了可变参，请参考写一个小的linux应用程
 
 > 
 
-如何裁减lab1, 实现一个可显示字符串"THU LAB1"且依然能够正确加载ucore OS的bootloader？如果不能完成实现，请说明理由。(spoc)
+
+如何能获取一个系统调用的调用次数信息？如何可以获取所有系统调用的调用次数信息？请简要说明可能的思路。(spoc)
 - [x]  
 
 > 
 
+如何裁减lab1, 实现一个可显示字符串"THU LAB1"且依然能够正确加载ucore OS的bootloader？如果不能完成实现，请说明理由。
+- [x]  
+
+> 
+
+对于ucore_lab中的labcodes/lab1，我们知道如果在qemu中执行，可能会出现各种稀奇古怪的问题，比如reboot，死机，黑屏等等。请通过qemu的分析功能来动态分析并回答lab1是如何执行并最终为什么会出现这种情况？
+- [x]  
+
+> 
+
+对于ucore_lab中的labcodes/lab1,如果出现了reboot，死机，黑屏等现象，请思考设计有效的调试方法来分析常在现背后的原因。
+- [x]  
+
+> 
 
 ---
 
@@ -79,12 +95,12 @@ lab1中printfmt函数用到了可变参，请参考写一个小的linux应用程
 > 
 
 
-在lab1/bin目录下，通过`objcopy -O binary kernel kernel.bin`可以把elf格式的ucore kernel转变成体积更小巧的binary格式的ucore kernel。为此，需要如何修改lab1的bootloader, 能够实现正确加载binar格式的ucore OS？ (hard)
+在lab1/bin目录下，通过`objcopy -O binary kernel kernel.bin`可以把elf格式的ucore kernel转变成体积更小巧的binary格式的ucore kernel。为此，需要如何修改lab1的bootloader, 能够实现正确加载binary格式的ucore OS？ (hard)
 - [x]  
 
 >
 
-GRUB是一个通用的bootloader，被用于加载多种操作系统。如果放弃lab1的bootloader，采用GRU来加载ucore OS，请问需要如何修改lab1, 能够实现此需求？ (hard)
+GRUB是一个通用的bootloader，被用于加载多种操作系统。如果放弃lab1的bootloader，采用GRUB来加载ucore OS，请问需要如何修改lab1, 能够实现此需求？ (hard)
 - [x]  
 
 >

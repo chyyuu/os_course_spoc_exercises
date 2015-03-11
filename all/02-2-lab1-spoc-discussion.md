@@ -18,7 +18,7 @@ NOTICE
   - 除第二点外，进一步描述了对8259中断控制器的初始过程（2分）
   - 除上述两点外，进一步描述了对8253时钟外设的初始化，或描述了对EFLAG操作使能中断（3分）
  ```
-- [x]  
+- 初始化IDT；初始化时钟终端的终端描述符；初始化终端控制器，包括8259的设置；初始化系统终中断设置。
 
 >  
 
@@ -30,7 +30,7 @@ lab1中完成了对哪些外设的访问？ (w2l2)
   - 除第二点外，进一步说明了串口（2分）
   - 除上述两点外，进一步说明了并口，或说明了CGA，或说明了键盘（3分）
  ```
-- [x]  
+- 时钟 串口 并口 CGA 键盘  
 
 >  
 
@@ -42,7 +42,7 @@ lab1中的cprintf函数最终通过哪些外设完成了对字符串的输出？
   - 除第二点外，进一步说明了并口（2分）
   - 除上述两点外，进一步说明了CGA（3分）
  ```
-- [x]  
+- 串口 并口 CGA  
 
 >  
 
@@ -53,18 +53,47 @@ lab1中的cprintf函数最终通过哪些外设完成了对字符串的输出？
 ---
 
 lab1中printfmt函数用到了可变参，请参考写一个小的linux应用程序，完成实现定义和调用一个可变参数的函数。(spoc)
-- [x]  
+- 使用宏：void va_start( va_list arg_ptr, prev_param ); 
+- type va_arg( va_list arg_ptr, type ); 
+- void va_end( va_list arg_ptr ); 
+- 包含在头文件stdarg.h中。
 
+```
+#include <stdio.h>
+#include <stdarg.h>
+int max(int n,....){
+    int i;
+    va_list ap;
+    va_start(ap,n);
+    int max = -0x7fffffff;
+    int tmp;
+    for(i = 0;i < n ;i++){
+        tmp = va_arg(ap,int);
+        if(max <tmp)
+　　　　　   max = tmp;
+    }
+    va_end(ap);
+    return max;
+}
+int main(){
+    printf("The max value of max() is %d\n",max(1,10,20,5));
+}
+```
 
 
 如果让你来一个阶段一个阶段地从零开始完整实现lab1（不是现在的填空考方式），你的实现步骤是什么？（比如先实现一个可显示字符串的bootloader（描述一下要实现的关键步骤和需要注意的事项），再实现一个可加载ELF格式文件的bootloader（再描述一下进一步要实现的关键步骤和需要注意的事项）...） (spoc)
-- [x]  
+- 先实现显示字符串的bootloader，初始化寄存器，完成实模式到保护模式转换。
+- 再实现可加载elf文件的bootloader，访问键盘，存储扇区，加载elf格式文件。
+- 实现函数调用关系的ucore
+- 实现处理终端的ucore
 
 > 
 
 
 如何能获取一个系统调用的调用次数信息？如何可以获取所有系统调用的调用次数信息？请简要说明可能的思路。(spoc)
-- [x]  
+- Linux操作系统：使用strace查看系统调用信息，包括次数、时间、类型等
+- uCore：添加代码进行调试，输出系统调用等信息
+
 
 > 
 

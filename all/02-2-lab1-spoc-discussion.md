@@ -68,14 +68,14 @@ void test(int i, ...)
 	va_end(get);
 	std::cout<<i<<' '<<j<<' '<<k<<std::endl;
 }
-
 int main()
 {
 	test(1);
 	test(1, 2);
 	test(1, 2, 3);
 	system("pause");
-} ```
+}
+```
 结果：
 1 ? ?
 1 2 ?

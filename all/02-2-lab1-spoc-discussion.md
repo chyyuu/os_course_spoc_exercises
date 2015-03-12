@@ -22,7 +22,7 @@ ucore OS在让外设时钟正常工作前的主要准备工作
 - [x]  
 
 >  ucore OS在让外设时钟正常工作前的主要准备工作包含以下几步
-一，初始化IDT，设置时钟中断的中断描述符
+一，IDT的初始地址和大小保存在中断描述符表寄存器IDTR中
 二，初始化8259中断控制器
 三，初始化8253时钟外设，对EFLAG操作使能中断
 
@@ -57,20 +57,39 @@ lab1中的cprintf函数最终通过哪些外设完成了对字符串的输出？
 ---
 
 lab1中printfmt函数用到了可变参，请参考写一个小的linux应用程序，完成实现定义和调用一个可变参数的函数。(spoc)
-- [x]  
-
+- [x]
+>
+求任意个自然数的平方和
+int SqSum(int n1, ...)
+{
+va_list arg_ptr;
+int nSqSum = 0, n = n1;
+va_start(arg_ptr, n1);
+while (n > 0)
+{
+    nSqSum += (n * n);
+    n = va_arg(arg_ptr, int);
+}
+va_end(arg_ptr);
+return nSqSum;
+}
+// 调用时
+int nSqSum = SqSum(7, 2, 7, 11, -1);
+可变参数函数的原型声明格式为：
+type VAFunction(type arg1, type arg2, … );
 
 
 如果让你来一个阶段一个阶段地从零开始完整实现lab1（不是现在的填空考方式），你的实现步骤是什么？（比如先实现一个可显示字符串的bootloader（描述一下要实现的关键步骤和需要注意的事项），再实现一个可加载ELF格式文件的bootloader（再描述一下进一步要实现的关键步骤和需要注意的事项）...） (spoc)
 - [x]  
 
-> 
+> 首先实现bios的加载，在CPU加电后能够加载好bios，需要注意加电后bios地址的查找，然后bios要从扇区将bootloader加载到内存中，所以要实现一个简单的bootloader，如能显示字符串，接下来再实现能够加载ELF格式文件的bootloader，bootloader实现后，再实现IDT控制中断以及系统调用。
 
 
 如何能获取一个系统调用的调用次数信息？如何可以获取所有系统调用的调用次数信息？请简要说明可能的思路。(spoc)
 - [x]  
 
-> 
+> 可以使用strace工具
+  命令strace -c +执行的程序可以显示所有系统调用的次数，时间。
 
 如何修改lab1, 实现一个可显示字符串"THU LAB1"且依然能够正确加载ucore OS的bootloader？如果不能完成实现，请说明理由。
 - [x]  

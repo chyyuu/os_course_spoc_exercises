@@ -23,8 +23,7 @@
   - 答案对上述两个要点进行了正确阐述（2分）
   - 答案除了对上述两个要点都进行了正确阐述外，还进行了扩展和更丰富的说明（3分）
  ```
-> Linux有上百个系统调用，大致的功能分类有：进程管理，文件操作，系统控制，内存管理，网络管理，socket控制，用户管理，进程间通信等。
-举例如下（依次对应上述各分类）： fork 创建一个新进程 clone 按指定条件创建子进程
+> Linux有上百个系统调用，大致的功能分类有：进程管理，文件操作，系统控制，内存管理，网络管理，socket控制，用户管理，进程间通信等. 举例如下:fork 创建一个新进程 clone 按指定条件创建子进程.
 open 打开文件 creat 创建新文件
 _sysctl 读/写系统参数 acct 启用或禁止进程记账
 mlock 内存页面加锁 munlock 内存页面解锁
@@ -42,7 +41,11 @@ sigpending 为指定的被阻塞信号设置队列 sigsuspend 挂起进程等待
   - 答案对上述两个要点进行了正确阐述（2分）
   - 答案除了对上述两个要点都进行了正确阐述外，还进行了扩展和更丰富的说明（3分）
  ```
- > ucore有二十几个系统调用，大致的功能分类有进程管理，文件操作，内存管理等，如： 进程管理： sys_exit, sys_fork, sys_wait, sys_exec, sys_yield, sys_getpid, sys_lab6_set_priority, sys_sleep, 进程间通信： sys_kill, 系统控制: sys_gettime, 文件管理： sys_open, sys_close, sys_read, sys_write, sys_seek, sys_fstat, sys_fsync, sys_getcwd, sys_getdirentry, sys_dup。
+ > ucore有二十几个系统调用，大致的功能分类有进程管理，文件操作，内存管理等.
+   进程管理: sys_exit, sys_fork, sys_wait, sys_exec, sys_yield, sys_getpid, sys_lab6_set_priority, sys_sleep.
+   进程间通信: sys_kill.
+   系统控制:  sys_gettime.
+   文件管理: sys_open, sys_close, sys_read, sys_write, sys_seek, sys_fstat, sys_fsync, sys_getcwd, sys_getdirentry,                       sys_dup。
 ## 3.4 linux系统调用分析
 
  1. 通过分析[lab1_ex0](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex0.md)了解Linux应用的系统调用编写和含义。(w2l1)
@@ -68,7 +71,7 @@ sigpending 为指定的被阻塞信号设置队列 sigsuspend 挂起进程等待
   - 答案对上述两个要点进行了正确阐述（2分）
   - 答案除了对上述两个要点都进行了正确阐述外，还进行了扩展和更丰富的说明（3分）
  ```
- > strace用来跟踪进程执行时的系统调用和所接收的信号，跟踪进程产生的系统调用，包括每一系统调用所执行的时间等。 Linux系统调用执行过程：应用程序调用系统调用接口，中断服务程序根据中断号转系统调用，系统调用根据函数号执行相应函数，函数执行完毕返回用户程序。
+ > strace用来跟踪进程执行时的系统调用和所接收的信号，跟踪进程产生的系统调用，包括每一系统调用所执行的时间等.      Linux系统调用执行过程：应用程序调用系统调用接口，中断服务程序根据中断号转系统调用，系统调用根据函数号执行相应函数，函数执行完毕返回用户程序.
  
 ## 3.5 ucore系统调用分析
  1. ucore的系统调用中参数传递代码分析。
@@ -79,4 +82,5 @@ sigpending 为指定的被阻塞信号设置队列 sigsuspend 挂起进程等待
 ## 3.6 请分析函数调用和系统调用的区别
  1. 请从代码编写和执行过程来说明。
    1. 说明`int`、`iret`、`call`和`ret`的指令准确功能
- 
+
+> int和iret用在 系统调用里面, call和ret用在函数里面, 都是处理完后结果返回给用户的命令.

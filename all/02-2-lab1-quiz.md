@@ -25,7 +25,7 @@
 GCC内联汇编 `asm("movl %ecx, %eax");` 的含义是()
 
 - [ ] 把 ecx 内容移动到 eax 
-- [ ] 把 eax 内容移动到 ecx 
+- [x] 把 eax 内容移动到 ecx 
 
 > 把 ecx 内容移动到 eax 
 

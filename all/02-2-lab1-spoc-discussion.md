@@ -107,7 +107,7 @@ lab1中printfmt函数用到了可变参，请参考写一个小的linux应用程
 > 用strace工具：strace -c ./XXX.exe
 > -c 统计每一系统调用的所执行的时间,次数和出错的次数等. 
 
-如何裁减lab1, 实现一个可显示字符串"THU LAB1"且依然能够正确加载ucore OS的bootloader？如果不能完成实现，请说明理由。
+如何修改lab1, 实现一个可显示字符串"THU LAB1"且依然能够正确加载ucore OS的bootloader？如果不能完成实现，请说明理由。
 - [x]  
 
 > 实现该功能需要在bootmain里面加入printf("THU LAB1")，但是这样就会超过512个字节，需要对原有的代码进行精简，但这个比较难以实现

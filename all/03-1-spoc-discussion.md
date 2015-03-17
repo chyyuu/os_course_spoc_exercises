@@ -33,48 +33,95 @@ NOTICE
 请参考ucore lab2代码，采用`struct pmm_manager` 根据你的`学号 mod 4`的结果值，选择四种（0:最优匹配，1:最差匹配，2:最先匹配，3:buddy systemm）分配算法中的一种或多种，在应用程序层面(可以 用python,ruby,C++，C，LISP等高语言)来实现，给出你的设思路，并给出测试用例。 (spoc)
 
 ```
+//学号2012011357 选择方式1：最差匹配
+#include <vector>
+#include <cstdlib>
+#include <algorithm>
+#define MEM_SIZE (1<<12)
+using namespace std;
+struct block { 
+    char * base;
+    size_t size;
+    bool free;
+    block(char * _base, size_t _size) {
+        base = _base, size = _size, free = true;
+    }        
+};
+bool size_cmp(const block& a, const block& b) { 
+    return a.size > b.size;
+}
+bool address_cmp(const block& a, const block& b) { 
+    return a.base <i b.base;
+}
+class pmm_manager {
+    char mem[MEM_SIZE];
+    size_t nr_free;
+    vector<block> blocks;
+public:
+    void init() {
+        nr_free = 0;
+        block tblock(mem, MEM_SIZE);
+        blocks.push_back(tblock);
+    }                                                   
+    char * alloc_pages(size_t n) { 
+        char * p;
+        for (int i = 0; i < blocks.size(); i ++) { 
+            if (!blocks[i].free) continue;
+            if (blocks[i].size == n) { 
+                blocks[i].free = false;
+                p = blocks[i].base;
+                nr_free -= n;
+                return p;
+            } else if (blocks[i].size > n) {
+                block tblock(blocks[i].base + n, blocks[i].size - n);
+                blocks.push_back(tblock);
+                blocks[i].free = false;
+                blocks[i].size = n;
+                p = blocks[i].base;
+                sort(blocks.begin(), blocks.end(), size_cmp);
+                nr_free -= n;
+                return p;
+            }
+        }
+        return NULL;
+    }
+    void free_pages(char * base, size_t n) { 
+        sort(blocks.begin(), blocks.end(), address_cmp);
+        int index, before = -1, after = 1, b_size = 0, a_size = 0;
+        char * start;
+        for (int i = 0; i < blocks.size(); i ++) { 
+            if(blocks[i].base == base) index = i;
+            blocks[i].free = true;
+        }
+        while (index + before >= 0 && blocks[index + before].free) { 
+            b_size += blocks[index + before].size;
+            before --;
+        }
+        start = blocks[index + before + 1].base;
+        while (index + after < blocks.size() && blocks[index + after].free) { 
+            a_size += blocks[index + after].size;
+            after ++;
+        }
+        blocks.erase(blocks.begin() + index + before + 1, blocks.begin() + index + after - 1);
+        block tblock(start, n + a_size + b_size);
+        blocks.push_back(tblock);
+        sort(blocks.begin(), blocks.end(), size_cmp);
+    }
+    size_t nr_free_pages() { 
+        return nr_free;
+    }
+    void check() {}
+};
+int main() { 
+    class pmm_manager pmm;
+    pmm.init();
+    char * a = pmm.alloc_pages(256);
+    char * b = pmm.alloc_pages(128);
+    char * c = pmm.alloc_pages(512);
+    pmm.free_pages(b, 128);
+    return 0;
+}
 
-int length(struct map * pMap)
-{
-int size=0;
-struct map *p=pMap;
-while(p!=NULL){
-size++;
-p=p->next
-}
-return size
-}
-unsigned cmp ( const void *a , const void *b)
-{
-return *(unsigned *)a - *(unsigned *)b;
-}
-
-char *lmalloc(unsigned size) //分配空闲区的函数。
-{
-start=coremap
-struct map *current = start;    //记录查找的起点。
-char *c;
-qsort(coremap, length(coremap), sizeof(struct map),cmp);
-//do
-//   {
-if (start->m_size > size)
-{           //有足够大的空闲区，有余。
-start->m_size = start->m_size - size; //减小分配过的表项空间。
-c = start->m_addr;
-start->m_addr += size;  //修改表项的首地址。
-return c;
-}
-else if (start->m_size == size){        //有正好大小的空闲区。
-start->next->prior = start->prior;  // 从链表中删除该表项。
-start->prior->next = start->next;   // 从链表中删除该表项。
-start->m_size = 0;
-return start->m_addr;
-}
-else
-return NULL;    //当前表项所指的空闲区不够，start 指向下一个表项。
-//}while (start != current); // 一直循环查找表项，直到回到起点。
-return NULL;         //没有找到合适大小的分配区，分配失败。
-}
 
 ```
 ```

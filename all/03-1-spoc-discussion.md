@@ -58,7 +58,190 @@ NOTICE
 伙伴分配器的一个极简实现
 http://coolshell.cn/tag/buddy
 ```
+- [x]  
 
+>
+本人学号2012011291.分配到buddysystem  
+示例代码如下。主要函数为bsAlloc与bsFree。测试样例直接写到了main函数中。执行即可。  
+代码说明：  
+用二叉树的每个节点对应一个内存块。节点中记录对应内存块的地址、尺寸、是否可用。根节点代表初始时的整块可用内存。  
+在一次malloc中，首先查找整棵树找到最佳匹配节点，然后进行尺寸减半分裂直至符合要求。  
+在一次free中，首先释放当前节点对应的空间，然后看他的兄弟节点是否能进行合并，进行递归的合并。  
+我的实现优点是较为简单且实现了基本思想，不足时许多地方没有考虑性能要求。  
+测试样例解释如下：  
+初始空间为64M  
+p1=7M，可以分配在起始地址0  
+p2=13M,可以分配在16  
+p3=16M,可以分配在32  
+p4=32M,没有可用空间，不能分配  
+此时free p1，倒出了8M空间，并与另外8M合并形成16M  
+p4仍无法分配  
+此时freep2，到出16M空间，与刚刚的16M合并形成32M  
+p4可以分配  
+最终执行结果符合上述。  
+  
+```
+#include<iostream>
+#include<cmath>
+using namespace std;
+class Node
+{
+public:
+	int addr;	//记录节点所管理内存的初始位置
+	int size;	//记录节点所管理内存的大小
+	bool able;	//节点是否可用
+	Node* parent;
+	Node* lchild;
+	Node* rchild;
+	Node(int Addr,int Size,Node* Parent,Node* Lchild,Node* Rchild)
+	{
+		addr=Addr;
+		size=Size;
+		parent=Parent;
+		lchild=Lchild;
+		rchild=Rchild;
+		able=true;
+	}
+	void split()	//一分为2，产生2个儿子节点
+	{
+		Node* l=new Node(addr,size/2,this,NULL,NULL);
+		Node* r=new Node(addr+size/2,size/2,this,NULL,NULL);
+		lchild=l;
+		rchild=r;
+	}
+};
+bool isLeaf(Node* n)
+{
+	return n->lchild == NULL;
+}
+bool isRoot(Node* n)
+{
+	return n->parent == NULL;
+}
+Node* findBrother(Node* n)
+{
+	if(isRoot(n))
+		return NULL;
+	if(n == (n->parent->lchild))
+		return n->parent->rchild;
+	else
+		return n->parent->lchild;
+}
+int next2(int a)	//寻找最接近的2的幂
+{
+	if(a==1)
+		return 1;
+	int counter=1;
+	while(a>2)
+	{
+		counter++;
+		a=a/2;
+	}
+	return pow(2,counter);
+}
+class Process	//定义一个抽象的进程，大小为size，addr为待分配地址,pnode为与地址关联的节点。若无，-1，节点null
+{
+public:
+	int addr;
+	int size;
+	int needSize;
+	Node* pnode;
+	Process(int s)
+	{
+		size=s;
+		needSize=next2(size);
+		addr=-1;
+		pnode=NULL;
+	}
+};
+Node* findNode(int needSize,Node* n)	//在n的子树中找到最适应节点，若无，返回NULL
+{
+	if(n->size < needSize)
+		return NULL;
+	if(isLeaf(n) && n->able==true)
+		return n;
+	if(isLeaf(n) && n->able==false)
+		return NULL;
+	Node* temp1=findNode(needSize,n->lchild);
+	Node* temp2=findNode(needSize,n->rchild);
+	if(!temp1)
+	{
+		if(!temp2)
+			return  NULL;
+		return temp2;
+	}
+	else
+	{
+		if(!temp2)
+			return temp1;
+		if(temp1->size <= temp2->size)
+			return temp1;
+		else
+			return temp2;
+	}
+}
+bool bsAlloc(Process& p,Node* head)	//若成功，对p的addr赋值，并返回true，否则 false
+{
+	Node* temp=findNode(p.needSize,head);	//找到最适应节点
+	//Node* temp=head;
+	if(!temp)
+		return false;
+	while(temp->size > p.needSize)	//分裂直到大小一致
+	{
+		temp->split();
+		temp=temp->lchild;
+	}
+	p.pnode=temp;
+	p.addr=temp->addr;
+	temp->able=false;
+	return true;
+}
+void bsFree(Process& p,Node* head)
+{
+	p.addr=-1;
+	p.pnode->able=true;	//释放
+	Node* temp=p.pnode;
+	p.pnode=NULL;
+	Node* bro=findBrother(temp);
+	while(bro && isLeaf(bro) && bro->able==true)	//合并
+	{
+		Node* d1=temp;
+		Node* d2=bro;
+		temp=temp->parent;
+		bro=findBrother(temp);
+		temp->lchild=NULL;
+		temp->rchild=NULL;
+		temp->able=true;
+		delete d1,d2;
+	}
+}
+int main()
+{
+	Node* head=new Node(0,64,NULL,NULL,NULL);	//测试样例。地址从0开始，大小为64M
+	Process p1(7);
+	Process p2(13);
+	Process p3(16);
+	Process p4(32);
+	bool flag1=bsAlloc(p1,head);
+	cout<<"p1是否成功:"<<flag1<<" addr="<<p1.addr<<endl;
+	bool flag2=bsAlloc(p2,head);
+	cout<<"p2是否成功:"<<flag2<<" addr="<<p2.addr<<endl;
+	bool flag3=bsAlloc(p3,head);
+	cout<<"p3是否成功:"<<flag3<<" addr="<<p3.addr<<endl;
+	bool flag4=bsAlloc(p4,head);
+	cout<<"p4是否成功:"<<flag4<<" addr="<<p4.addr<<endl;
+	bsFree(p1,head);
+	cout<<"free 1"<<endl;
+	flag4=bsAlloc(p4,head);
+	cout<<"p4是否成功:"<<flag4<<" addr="<<p4.addr<<endl;
+	bsFree(p2,head);
+	cout<<"free 2"<<endl;
+	flag4=bsAlloc(p4,head);
+	cout<<"p4是否成功:"<<flag4<<" addr="<<p4.addr<<endl;
+	system("pause");
+	return 0;
+}
+```
 --- 
 
 ## 扩展思考题

@@ -30,15 +30,68 @@ NOTICE
 请参考ucore lab2代码，采用`struct pmm_manager` 根据你的`学号 mod 4`的结果值，选择四种（0:最优匹配，1:最差匹配，2:最先匹配，3:buddy systemm）分配算法中的一种或多种，在应用程序层面(可以 用python,ruby,C++，C，LISP等高语言)来实现，给出你的设思路，并给出测试用例。 (spoc)
 
 ```
-如何表示空闲块？ 如何表示空闲块列表？ 
-[(start0, size0),(start1,size1)...]
-在一次malloc后，如果根据某种顺序查找符合malloc要求的空闲块？如何把一个空闲块改变成另外一个空闲块，或消除这个空闲块？如何更新空闲块列表？
-在一次free后，如何把已使用块转变成空闲块，并按照某种顺序（起始地址，块大小）插入到空闲块列表中？考虑需要合并相邻空闲块，形成更大的空闲块？
-如果考虑地址对齐（比如按照4字节对齐），应该如何设计？
-如果考虑空闲/使用块列表组织中有部分元数据，比如表示链接信息，如何给malloc返回有效可用的空闲块地址而不破坏
-元数据信息？
-伙伴分配器的一个极简实现
-http://coolshell.cn/tag/buddy
+学号 mod 4 = 1，实现最差匹配。采用python简单模拟该算法，在类pmm_manager中主要实现了分配内存（alloc）和释放内存（free）两个函数。代码如下：
+
+class pmm_manager:
+
+    def __init__(self, size):
+        self.emptyList = []
+        self.emptyList.append([0, size])
+        self.runList = []
+
+    def alloc(self, size, id):
+        for block in self.emptyList:
+            if block[1] >= size:
+                self.runList.append([block[0], size, id])
+                self.emptyList.remove(block)
+                if block[1] > size:
+                    self.emptyList.append([block[0] + size, block[1] - size])
+                    self.emptyList.sort(key = lambda x : x[1], reverse = True)
+                break
+
+    def free(self, id):
+        for block in self.runList:
+            if block[2] == id:
+                self.runList.remove(block)
+                pre = nxt = []
+                for eblock in self.emptyList:
+                    if block[0] == eblock[0] + eblock[1]:
+                        pre = eblock
+                    elif block[0] + block[1] == eblock[0]:
+                        nxt = eblock
+                if len(pre) == 0 and len(nxt) == 0:
+                    self.emptyList.append([block[0], block[1]])
+                elif len(pre) > 0 and len(nxt) == 0:
+                    self.emptyList.append([pre[0], pre[1] + block[1]])
+                elif len(pre) == 0 and len(nxt) > 0:
+                    self.emptyList.append([block[0], block[1] + nxt[1]])
+                else:
+                    self.emptyList.append([pre[0], pre[1] + block[1] + nxt[1]])
+                self.emptyList.sort(key = lambda x : x[1], reverse = True)
+                break
+
+其中emptyList保存所有空闲块，runList保存所有非空闲块。测试代码如下：
+
+m = pmm_manager(10000)
+m.alloc(1000, 0)
+m.alloc(1000, 1)
+m.alloc(2000, 2)
+m.alloc(4500, 3)
+m.alloc(500, 4)
+m.alloc(1000, 5)
+m.free(0)
+m.free(2)
+m.free(4)
+print(m.emptyList)
+print(m.runList)
+m.alloc(400, 6)
+print(m.emptyList)
+print(m.runList)
+m.free(6)
+print(m.emptyList)
+print(m.runList)
+
+根据程序的输出可验证，能够按照最差匹配的规则正常分配、释放内存。
 ```
 
 --- 

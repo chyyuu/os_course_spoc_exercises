@@ -42,3 +42,49 @@ buddy system分配算法：优点：分配效率高，还可回收内存，避�
 元数据信息？
 伙伴分配器的一个极简实现
 http://coolshell.cn/tag/buddy
+>
+---程序代码
+#include<stdio.h>
+#include<stdlib.h>
+
+int length(struct map * pMap)
+{
+ int size=0;
+ struct map *p=pMap;
+ while(p!=NULL){
+    size++;
+    p=p->next
+ }
+ return size
+}
+unsigned cmp ( const void *a , const void *b)
+{
+        return *(unsigned *)a - *(unsigned *)b;
+}
+ 
+char *lmalloc(unsigned size) //分配空闲区的函数。
+{
+    start=coremap
+    struct map *current = start;    //记录查找的起点。
+    char *c;
+    qsort(coremap, length(coremap), sizeof(struct map),cmp);
+    //do
+    //   {
+            if (start->m_size > size)
+            {           //有足够大的空闲区，有余。
+                start->m_size = start->m_size - size; //减小分配过的表项空间。
+                c = start->m_addr;
+                start->m_addr += size;  //修改表项的首地址。
+                return c;
+            }
+            else if (start->m_size == size){        //有正好大小的空闲区。
+                start->next->prior = start->prior;  // 从链表中删除该表项。
+                start->prior->next = start->next;   // 从链表中删除该表项。
+                start->m_size = 0;
+                return start->m_addr;
+            }
+            else
+                return NULL;    //当前表项所指的空闲区不够，start 指向下一个表项。
+        //}while (start != current); // 一直循环查找表项，直到回到起点。
+    return NULL;         //没有找到合适大小的分配区，分配失败。
+}

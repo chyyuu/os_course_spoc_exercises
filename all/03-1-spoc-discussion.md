@@ -31,6 +31,180 @@ buddy system分配算法：优点：分配效率高，还可回收内存，避�
 ## 小组思考题
 
 请参考ucore lab2代码，采用`struct pmm_manager` 根据你的`学号 mod 4`的结果值，选择四种（0:最优匹配，1:最差匹配，2:最先匹配，3:buddy systemm）分配算法中的一种或多种，在应用程序层面(可以 用python,ruby,C++，C，LISP等高语言)来实现，给出你的设思路，并给出测试用例。 (spoc)
+>
+#include<stdio.h>
+#include<stdlib.h>
+
+#define N 	1024
+
+
+typedef struct node
+{
+	char *addr; //指向mem处开始的地址
+	int size;  //空闲块的大小 
+	struct node *next; //指向下一个空闲块 
+}node;
+
+char mem[N]; 
+node freelist; 
+
+void init()
+{
+	node *ptr = (node *)malloc(sizeof(node));
+	ptr->addr = mem;
+	ptr->size = N;
+	ptr->next = NULL;
+	freelist.next = ptr;
+}
+
+void removenode(node *ptr, node *prev)
+{	
+	prev->next = ptr->next;
+	free(ptr);
+}
+
+/* 首次适配法：从自由空闲区中选取第一个合适空闲区来分配 
+ * 返回分配内存区首地址
+ */
+char *firstfit(int size) 
+{
+	node *ptr, *prev;
+	char *memptr;
+	
+	for(prev=&freelist, ptr=prev->next; ptr; prev=ptr, ptr=ptr->next)
+		if(ptr->size > size)
+		{
+			memptr = ptr->addr;
+			ptr->size -= size; //从空闲区去掉size空间
+			ptr->addr += size; //空闲区首地址往后移size个单位
+			return memptr; //返回申请到的空闲区 首地址
+		}
+		else if(ptr->size == size)
+		{
+			memptr = ptr->addr;
+			removenode(ptr, prev);
+			return memptr;
+		}
+	return NULL; 
+}
+
+
+void addtofreelist(char *memptr, int size)
+{
+	node *prev, *ptr, *newptr;
+	
+	for(prev=&freelist, ptr=prev->next; ptr && ptr->addr <= memptr; prev=ptr, ptr=ptr->next)
+	{} 
+	newptr = new node();
+	newptr->addr = memptr;
+	newptr->size = size;
+	newptr->next = ptr;
+	prev->next = newptr;
+}
+
+/* combine blocks of list if necessary */
+void combine()
+{
+	node *prev, *ptr;
+	
+	for(prev=&freelist, ptr=prev->next; ptr; prev=ptr, ptr=ptr->next)
+		if(prev != &freelist && prev->addr+prev->size == ptr->addr)
+		{
+			prev->next = ptr->next;
+			prev->size = prev->size + ptr->size;
+			free(ptr);
+		}
+}
+
+/* prt: sizeof(int) contains size of the pool allocated 
+ * 返回分配的空间首地址(不包括最前面的长度的4个字节)
+ */
+char *memalloc(int size)
+{
+	char *ptr = firstfit(size + sizeof(int)); //此处选择分配算法
+	printf("allocating %d using firstfit...\n", size);
+	if(ptr == NULL)
+		return NULL;
+	*(int *)ptr = size; 
+	return ptr+sizeof(int);
+}
+
+void memfree(char *ptr)
+{
+	int size = *(int *)(ptr-sizeof(int));
+	printf("freeing %d...\n", size);
+	addtofreelist(ptr-sizeof(int), size+sizeof(int));
+	combine();
+}
+
+void printfreelist()
+{
+	node *ptr;
+	printf("\t");
+	for(ptr=freelist.next; ptr != NULL; ptr=ptr->next)
+		printf("{%u %d}", ptr->addr, ptr->size);
+	putchar('\n');
+}
+
+main()
+{
+	char *p1, *p2, *p3, *p4, *p5;
+	init();
+	printfreelist();
+	
+	p1 = memalloc(10);//note：分配10个字节，但其前面还有4个字节用于指示长度的，所以共用了14字节
+	printfreelist();
+	
+	p2 = memalloc(15);
+	printfreelist();
+	
+	p3 = memalloc(23);
+	printfreelist();
+	
+	p4 = memalloc(3);
+	printfreelist();
+	
+	p5 = memalloc(8);
+	printfreelist();
+	
+	memfree(p1);
+	printfreelist();
+	
+	memfree(p5);
+	printfreelist();
+	
+	memfree(p3);
+	printfreelist();
+	
+	p1 = memalloc(23);
+	printfreelist();
+	
+	p1 = memalloc(23);
+	printfreelist();
+	
+	memfree(p2);
+	printfreelist();
+	
+	p1 = memalloc(3);
+	printfreelist();
+	
+	memfree(p4);
+	printfreelist();
+	
+	p2 = memalloc(1);
+	printfreelist();
+	
+	memfree(p1);
+	printfreelist();
+	
+	memfree(p2);
+	printfreelist();
+	
+	system("pause");
+	return 0;
+	
+}
+
 
 ```
 如何表示空闲块？ 如何表示空闲块列表？ 
@@ -42,49 +216,4 @@ buddy system分配算法：优点：分配效率高，还可回收内存，避�
 元数据信息？
 伙伴分配器的一个极简实现
 http://coolshell.cn/tag/buddy
->
----程序代码
-#include<stdio.h>
-#include<stdlib.h>
 
-int length(struct map * pMap)
-{
- int size=0;
- struct map *p=pMap;
- while(p!=NULL){
-    size++;
-    p=p->next
- }
- return size
-}
-unsigned cmp ( const void *a , const void *b)
-{
-        return *(unsigned *)a - *(unsigned *)b;
-}
- 
-char *lmalloc(unsigned size) //分配空闲区的函数。
-{
-    start=coremap
-    struct map *current = start;    //记录查找的起点。
-    char *c;
-    qsort(coremap, length(coremap), sizeof(struct map),cmp);
-    //do
-    //   {
-            if (start->m_size > size)
-            {           //有足够大的空闲区，有余。
-                start->m_size = start->m_size - size; //减小分配过的表项空间。
-                c = start->m_addr;
-                start->m_addr += size;  //修改表项的首地址。
-                return c;
-            }
-            else if (start->m_size == size){        //有正好大小的空闲区。
-                start->next->prior = start->prior;  // 从链表中删除该表项。
-                start->prior->next = start->next;   // 从链表中删除该表项。
-                start->m_size = 0;
-                return start->m_addr;
-            }
-            else
-                return NULL;    //当前表项所指的空闲区不够，start 指向下一个表项。
-        //}while (start != current); // 一直循环查找表项，直到回到起点。
-    return NULL;         //没有找到合适大小的分配区，分配失败。
-}

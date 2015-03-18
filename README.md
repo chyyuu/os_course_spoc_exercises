@@ -1,8 +1,8 @@
-# 操作系统习题集
+# MOOC OS习题集
 
-这里搜集了很多操作系统课程相关的习题，包括部分考研试题。
+这里包括从互联网上搜集的操作系统课程相关习题和答案，包括部分考研试题，版权属于各出题单位或个人。由清华大学MOOC OS课的老师和助教撰写的习题和答案的文档版权属于陈渝、向勇，并采用 Creative Commons Attribution/Share-Alike (CC-BY-SA) License.
 
-采用gitbook的方式展现，通过[gitbook](https://www.gitbook.io/book/xuyongjiande/os\_exercises)访问，可进行在线交互式答题。
+MOOC OS习题集采用gitbook的方式展现，通过[gitbook](https://www.gitbook.io/book/xuyongjiande/os\_exercises)访问，可进行在线交互式答题。
 
 下面是gitbook提供的试题编写的例子：
 

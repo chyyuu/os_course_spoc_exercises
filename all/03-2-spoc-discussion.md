@@ -66,23 +66,109 @@ Virtual Address 390e
 Virtual Address 748b
 ```
 
-比如答案可以如下表示：
+
 ```
-Virtual Address 7570:
-  --> pde index:0x1d  pde contents:(valid 1, pfn 0x33)
-    --> pte index:0xb  pte contents:(valid 0, pfn 0x7f)
+运行如下程序：
+
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+ 	ifstream fin("memory.txt");
+    string tmp;
+    int mem[4096];
+    for (int i = 0; i < 128; i ++) {
+        fin >> tmp;
+        fin >> tmp;
+        for (int j = 0; j < 32; j ++)
+         	fin >> hex >> mem[i * 32 + j];
+ 	}
+ 	fin.close();
+ 	fin.open("input.txt");
+ 	ofstream fout("output.txt");
+  	const int PDBR = 544;
+ 	int va, pa, pde, pte, off0, off1, off2;
+ 	for (int i = 0; i < 10; i ++) {
+ 	    fout << "Virtual Address ";
+ 	    fin >> hex >> va;
+		fout << setfill('0') << setw(4) << hex << va << ":" << endl;
+  		off0 = va >> 10, off1 = (va & 0x3e0) >> 5, off2 = va & 0x1f;
+  		pde = mem[PDBR + off0];
+		fout << "  --> pde index:0x" << hex << off0 << " pde contents:(valid " 
+	 		<< (pde >> 7) << ", pfn 0x" << (pde & 0x7f) << ")" << endl;
+		if (pde >> 7) {
+  			pte = mem[((pde & 0x7f) << 5) + off1];
+			fout << "    --> pte index:0x" << hex << off1 << "  pte contents:(valid " 
+   				<< (pte >> 7) << ", pfn 0x" << (pte & 0x7f) << ")" << endl;
+			if (pte >> 7) {
+			    pa = ((pte & 0x7f) << 5) + off2;
+			    fout << "      --> Translates to Physical Address 0x" << hex << pa 
+       				<< " --> Value: " << mem[pa] << endl;
+			} else fout << "      --> Fault (page table entry not valid)" << endl;
+		} else fout << "      --> Fault (page directory entry not valid)" << endl;
+		fout << endl;
+  	}
+  	fin.close();
+  	fout.close();
+  	return 0;           
+}    
+
+得到如下结果：
+
+Virtual Address 6c74:
+  --> pde index:0x1b pde contents:(valid 1, pfn 0x20)
+    --> pte index:0x3  pte contents:(valid 1, pfn 0x61)
+      --> Translates to Physical Address 0xc34 --> Value: 6
+
+Virtual Address 6b22:
+  --> pde index:0x1a pde contents:(valid 1, pfn 0x52)
+    --> pte index:0x19  pte contents:(valid 1, pfn 0x47)
+      --> Translates to Physical Address 0x8e2 --> Value: 1a
+
+Virtual Address 03df:
+  --> pde index:0x0 pde contents:(valid 1, pfn 0x5a)
+    --> pte index:0x1e  pte contents:(valid 1, pfn 0x5)
+      --> Translates to Physical Address 0xbf --> Value: f
+
+Virtual Address 69dc:
+  --> pde index:0x1a pde contents:(valid 1, pfn 0x52)
+    --> pte index:0xe  pte contents:(valid 0, pfn 0x7f)
       --> Fault (page table entry not valid)
-      
-Virtual Address 21e1:
-  --> pde index:0x8  pde contents:(valid 0, pfn 0x7f)
+
+Virtual Address 317a:
+  --> pde index:0xc pde contents:(valid 1, pfn 0x18)
+    --> pte index:0xb  pte contents:(valid 1, pfn 0x35)
+      --> Translates to Physical Address 0x6ba --> Value: 1e
+
+Virtual Address 4546:
+  --> pde index:0x11 pde contents:(valid 1, pfn 0x21)
+    --> pte index:0xa  pte contents:(valid 0, pfn 0x7f)
+      --> Fault (page table entry not valid)
+
+Virtual Address 2c03:
+  --> pde index:0xb pde contents:(valid 1, pfn 0x44)
+    --> pte index:0x0  pte contents:(valid 1, pfn 0x57)
+      --> Translates to Physical Address 0xae3 --> Value: 16
+
+Virtual Address 7fd7:
+  --> pde index:0x1f pde contents:(valid 1, pfn 0x12)
+    --> pte index:0x1e  pte contents:(valid 0, pfn 0x7f)
+      --> Fault (page table entry not valid)
+
+Virtual Address 390e:
+  --> pde index:0xe pde contents:(valid 0, pfn 0x7f)
       --> Fault (page directory entry not valid)
 
-Virtual Address 7268:
-  --> pde index:0x1c  pde contents:(valid 1, pfn 0x5e)
-    --> pte index:0x13  pte contents:(valid 1, pfn 0x65)
-      --> Translates to Physical Address 0xca8 --> Value: 16
-```
+Virtual Address 748b:
+  --> pde index:0x1d pde contents:(valid 1, pfn 0x0)
+    --> pte index:0x4  pte contents:(valid 0, pfn 0x7f)
+      --> Fault (page table entry not valid)
 
+```
 
 
 （3）请基于你对原理课二级页表的理解，并参考Lab2建页表的过程，设计一个应用程序（可基于python, ruby, C, C++，LISP等）可模拟实现(2)题中描述的抽象OS，可正确完成二级页表转换。

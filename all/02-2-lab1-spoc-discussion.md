@@ -339,6 +339,11 @@ A20的使能代码分析？
 - [x]  
 
 > 
+
+函数read_ebp是inline的，而函数read_eip是__noinline的，能否正好相反设置，即设置函数read_ebp是_noinline的，而函数read_eip是inline的？为什么？
+- [x]
+
+>
 ---
 
 

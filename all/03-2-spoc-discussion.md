@@ -64,27 +64,6 @@ Virtual Address 7fd7
 Virtual Address 390e
 Virtual Address 748b
 ```
-
-比如答案可以如下表示：
-```
-Virtual Address 7570:
-  --> pde index:0x1d  pde contents:(valid 1, pfn 0x33)
-    --> pte index:0xb  pte contents:(valid 0, pfn 0x7f)
-      --> Fault (page table entry not valid)
-      
-Virtual Address 21e1:
-  --> pde index:0x8  pde contents:(valid 0, pfn 0x7f)
-      --> Fault (page directory entry not valid)
-
-Virtual Address 7268:
-  --> pde index:0x1c  pde contents:(valid 1, pfn 0x5e)
-    --> pte index:0x13  pte contents:(valid 1, pfn 0x65)
-      --> Translates to Physical Address 0xca8 --> Value: 16
-```
-
-
-
-（3）请基于你对原理课二级页表的理解，并参考Lab2建页表的过程，设计一个应用程序（可基于python, ruby, C, C++，LISP等）可模拟实现(2)题中描述的抽象OS，可正确完成二级页表转换。
 ```
 #include <iostream>
 #include <fstream>
@@ -92,65 +71,119 @@ Virtual Address 7268:
 int memo[4096];//4KB内存
 uint32_t get_page(uint32_t v_addr)
 {
-    uint32_t ans = 0;
-    uint32_t pde = v_addr & 0x00007c00;
-    uint32_t pte = v_addr & 0x000003e0;
-    return ans;
+uint32_t ans = 0;
+uint32_t pde = v_addr & 0x00007c00;
+uint32_t pte = v_addr & 0x000003e0;
+return ans;
 }
 using namespace std;
 int main(int argc, const char * argv[]) {
-    ifstream fin("1.txt");
-    char s[100];
-    int c = 0, num;
-    while (fin >> s) {
-        if (strcmp(s, "page") == 0) {
-            fin >> s;
-            continue;
-        }
-        sscanf(s, "%x", &num);
-        memo[c] = num;
-        c++;
-    }
-    int x;
-    while(true)
-    {
-    scanf("%x", &x);
-    int offset = x %32;
-    x = x>>5;
-    int  pte = x %32;
-    x = x>>5;
-    int pde = x %32;
-    int pdbr = 544;
-    int pde_2 = pdbr + pde;
-    int valid1 = memo[pde_2] >> 7;
-    if(valid1 == 0)
-    {
-     printf("Fault (page directory entry not valid)\n");
-     continue;
-    }
-    else
-    {
-        int pter = memo[pde_2] % (1<<7);
-        printf("pde index : %x pde contents :(valid %d, pfn %x)\n",pde,valid1,pter);
-        int pte_2 = (pter << 5) + pte;
-        int pframe = memo[pte_2];
-        int valid2 = pframe >> 7;
-        if(valid2 ==0)
-        {
-         printf("Fault (page table entry not valid)\n");       
-         continue;  
-        }
-        else
-        {
-             printf("pte index : %x pte contents :(valid %d, pfn %x)\n",pte,valid2,pframe %(1<<7));
-            int pp = ((pframe %(1<<7)) << 5) + offset;
-            printf("%x\n",memo[pp]);
-        }
-    }
-    }
-    return 0;
+ifstream fin("1.txt");
+char s[100];
+int c = 0, num;
+while (fin >> s) {
+if (strcmp(s, "page") == 0) {
+fin >> s;
+continue;
+}
+sscanf(s, "%x", &num);
+memo[c] = num;
+c++;
+}
+int x;
+while(true)
+{
+scanf("%x", &x);
+int offset = x %32;
+x = x>>5;
+int  pte = x %32;
+x = x>>5;
+int pde = x %32;
+int pdbr = 544;
+int pde_2 = pdbr + pde;
+int valid1 = memo[pde_2] >> 7;
+if(valid1 == 0)
+{
+printf("Fault (page directory entry not valid)\n");
+continue;
+}
+else
+{
+int pter = memo[pde_2] % (1<<7);
+printf("pde index : %x pde contents :(valid %d, pfn %x)\n",pde,valid1,pter);
+int pte_2 = (pter << 5) + pte;
+int pframe = memo[pte_2];
+int valid2 = pframe >> 7;
+if(valid2 ==0)
+{
+printf("Fault (page table entry not valid)\n");       
+continue;  
+}
+else
+{
+printf("pte index : %x pte contents :(valid %d, pfn %x)\n",pte,valid2,pframe %(1<<7));
+int pp = ((pframe %(1<<7)) << 5) + offset;
+printf("%x\n",memo[pp]);
+}
+}
+}
+return 0;
 }
 ```
+```
+Virtual Address 6c74:
+--> pde index:0x1b  pde contents:(valid 1, pfn 0x20)
+--> pte index:0x03  pte contents:(valid 1, pfn 0x61)
+--> Translates to Physical Address 0x0c34 --> Value: 0x06
+
+Virtual Address 6b22:
+--> pde index:0x1a  pde contents:(valid 1, pfn 0x52)
+--> pte index:0x19  pte contents:(valid 1, pfn 0x47)
+--> Translates to Physical Address 0x08e2 --> Value: 0x1a
+
+Virtual Address 03df:
+--> pde index:0x00  pde contents:(valid 1, pfn 0x5a)
+--> pte index:0x1e  pte contents:(valid 1, pfn 0x05)
+--> Translates to Physical Address 0x00bf --> Value: 0x0f
+
+Virtual Address 69dc:
+--> pde index:0x1a  pde contents:(valid 1, pfn 0x52)
+--> pte index:0x0e  pte contents:(valid 0, pfn 0x7f)
+--> Fault (page table entry not valid)
+
+Virtual Address 317a:
+--> pde index:0x0c  pde contents:(valid 1, pfn 0x18)
+--> pte index:0x0b  pte contents:(valid 1, pfn 0x35)
+--> Translates to Physical Address 0x06ba --> Value: 0x1e
+
+Virtual Address 4546:
+--> pde index:0x1b  pde contents:(valid 1, pfn 0x21)
+--> pte index:0xb  pte contents:(valid 0, pfn 0x7f)
+--> Fault (page table entry not valid)
+
+Virtual Address 2c03:
+--> pde index:0x11  pde contents:(valid 1, pfn 0x44)
+--> pte index:0x0a  pte contents:(valid 1, pfn 0x57)
+--> Translates to Physical Address 0x0ae3 --> Value: 0x16
+
+Virtual Address 7fd7:
+--> pde index:0x1f  pde contents:(valid 1, pfn 0x12)
+--> pte index:0x1e  pte contents:(valid 0, pfn 0x7f)
+--> Fault (page table entry not valid)
+
+Virtual Address 390e:
+--> pde index:0x0e  pde contents:(valid 0, pfn 0x7f)
+--> Fault (page table entry not valid)
+
+Virtual Address 748b:
+--> pde index:0x1d  pde contents:(valid 1, pfn 0x00)
+--> pte index:0x04  pte contents:(valid 0, pfn 0x7f)
+--> Fault (page table entry not valid)
+```
+
+
+
+（3）请基于你对原理课二级页表的理解，并参考Lab2建页表的过程，设计一个应用程序（可基于python, ruby, C, C++，LISP等）可模拟实现(2)题中描述的抽象OS，可正确完成二级页表转换。
 
 （4）假设你有一台支持[反置页表](http://en.wikipedia.org/wiki/Page_table#Inverted_page_table)的机器，请问你如何设计操作系统支持这种类型计算机？请给出设计方案。
 - 建立反置列表，通过页帧对应页标号；查找时利用哈希加速，建立hashlist，方便产生冲突时确定正确地页帧。

@@ -20,7 +20,9 @@ NOTICE
   - 正确描述了64bit CPU下的多级页表的级数和多级页表的结构或反置页表的结构（2分）
   - 除上述两点外，进一步描述了在多级页表或反置页表下的虚拟地址-->物理地址的映射过程（3分）
  ```
-- [x]  
+- 64位系统的地址空间有2^64，算是比较大的空间。目前使用48位地址，虽然有所减少，但仍然是很大的空间，采用多级也表进行管理。ia64/ppc64/alpha使用三级页表，x86_64使用四级。
+- 多级页表下，得到虚地址后查找页表的偏置量，第一级页表的地址由PDBR和偏置相加得到，并由此查询第二级页表的起始地址。与第二级偏置相加即为第二级的表项。最后一级页表的内容移位后和偏移相加即是最终的物理地址。
+- 反置页表也是经常被使用的，每个物理页帧对应一个表项。得到虚地址后通过哈希函数找到表项，并和冲突项中所有的虚拟地址对比，相同则得到对应的物理地址。 
 
 >  
 
@@ -29,9 +31,8 @@ NOTICE
 
 （1）(spoc) 某系统使用请求分页存储管理，若页在内存中，满足一个内存请求需要150ns (10^-9s)。若缺页率是10%，为使有效访问时间达到0.5us(10^-6s),求不在内存的页面的平均访问时间。请给出计算步骤。 
 
-- [x]  
-
-> 500=0.9\*150+0.1\*x
+- 500 = 0.9 * 150 + 0.1*x  
+- x = 3650ns = 3.65us
 
 （2）(spoc) 有一台假想的计算机，页大小（page size）为32 Bytes，支持32KB的虚拟地址空间（virtual address space）,有4KB的物理内存空间（physical memory），采用二级页表，一个页目录项（page directory entry ，PDE）大小为1 Byte,一个页表项（page-table entries
 PTEs）大小为1 Byte，1个页目录表大小为32 Bytes，1个页表大小为32 Bytes。页目录基址寄存器（page directory base register，PDBR）保存了页目录表的物理地址（按页对齐）。
@@ -84,9 +85,75 @@ Virtual Address 7268:
 
 
 （3）请基于你对原理课二级页表的理解，并参考Lab2建页表的过程，设计一个应用程序（可基于python, ruby, C, C++，LISP等）可模拟实现(2)题中描述的抽象OS，可正确完成二级页表转换。
-
+```
+#include <iostream>
+#include <fstream>
+#include <sstream>
+int memo[4096];//4KB内存
+uint32_t get_page(uint32_t v_addr)
+{
+    uint32_t ans = 0;
+    uint32_t pde = v_addr & 0x00007c00;
+    uint32_t pte = v_addr & 0x000003e0;
+    return ans;
+}
+using namespace std;
+int main(int argc, const char * argv[]) {
+    ifstream fin("1.txt");
+    char s[100];
+    int c = 0, num;
+    while (fin >> s) {
+        if (strcmp(s, "page") == 0) {
+            fin >> s;
+            continue;
+        }
+        sscanf(s, "%x", &num);
+        memo[c] = num;
+        c++;
+    }
+    int x;
+    while(true)
+    {
+    scanf("%x", &x);
+    int offset = x %32;
+    x = x>>5;
+    int  pte = x %32;
+    x = x>>5;
+    int pde = x %32;
+    int pdbr = 544;
+    int pde_2 = pdbr + pde;
+    int valid1 = memo[pde_2] >> 7;
+    if(valid1 == 0)
+    {
+     printf("Fault (page directory entry not valid)\n");
+     continue;
+    }
+    else
+    {
+        int pter = memo[pde_2] % (1<<7);
+        printf("pde index : %x pde contents :(valid %d, pfn %x)\n",pde,valid1,pter);
+        int pte_2 = (pter << 5) + pte;
+        int pframe = memo[pte_2];
+        int valid2 = pframe >> 7;
+        if(valid2 ==0)
+        {
+         printf("Fault (page table entry not valid)\n");       
+         continue;  
+        }
+        else
+        {
+             printf("pte index : %x pte contents :(valid %d, pfn %x)\n",pte,valid2,pframe %(1<<7));
+            int pp = ((pframe %(1<<7)) << 5) + offset;
+            printf("%x\n",memo[pp]);
+        }
+    }
+    }
+    return 0;
+}
+```
 
 （4）假设你有一台支持[反置页表](http://en.wikipedia.org/wiki/Page_table#Inverted_page_table)的机器，请问你如何设计操作系统支持这种类型计算机？请给出设计方案。
+- 建立反置列表，通过页帧对应页标号；查找时利用哈希加速，建立hashlist，方便产生冲突时确定正确地页帧。
 
  (5)[X86的页面结构](http://os.cs.tsinghua.edu.cn/oscourse/OS2015/lecture06#head-1f58ea81c046bd27b196ea2c366d0a2063b304ab)
 --- 

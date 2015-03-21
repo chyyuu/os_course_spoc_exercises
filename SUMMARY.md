@@ -18,6 +18,7 @@
     * [lab2 在线练习](all/03-3-lab2-quiz.md)
     * [lab2 SPOC讨论](all/03-3-lab2-spoc-discussion.md)
 * [虚拟内存管理](all/5&6-vmm.md)
+    * [lec8 SPOC讨论](all/04-1-spoc-discussion.md)
 * [进程、线程管理](all/7-process&thread.md)
 * [CPU调度](all/8-sched.md)
 * [同步](all/9-sync.md)

@@ -46,11 +46,16 @@ NOTICE
 ## 小组思考题
 ---
 
+<<<<<<< HEAD
 （1）(spoc) 某系统使用请求分页存储管理，若页在内存中，满足一个内存请求需要150ns。若缺页率是10%，为使有效访问时间达到0.5ms,求不在内存的页面的平均访问时间。请给出计算步骤。 
 解： 设不在内存的平均访问时间是xms
        缺页率10%，即有10%的访问不在内存中。有效访问时间为0.5ms
        则 0.5 = 0.00015*0.9 + x*0.1
        解得x=4.998 ms
+=======
+（1）(spoc) 某系统使用请求分页存储管理，若页在内存中，满足一个内存请求需要150ns (10^-9s)。若缺页率是10%，为使有效访问时间达到0.5us(10^-6s),求不在内存的页面的平均访问时间。请给出计算步骤。 
+
+>>>>>>> 6f717180d66db5000496178cb64ae8e3b70a6023
 - [x]  
 
 （2）(spoc) 有一台假想的计算机，页大小（page size）为32 Bytes，支持32KB的虚拟地址空间（virtual address space）,有4KB的物理内存空间（physical memory），采用二级页表，一个页目录项（page directory entry ，PDE）大小为1 Byte,一个页表项（page-table entries
@@ -158,7 +163,7 @@ Fault (page table entry not valid)
 
 （4）假设你有一台支持[反置页表](http://en.wikipedia.org/wiki/Page_table#Inverted_page_table)的机器，请问你如何设计操作系统支持这种类型计算机？请给出设计方案。
 
-
+ (5)[X86的页面结构](http://os.cs.tsinghua.edu.cn/oscourse/OS2015/lecture06#head-1f58ea81c046bd27b196ea2c366d0a2063b304ab)
 --- 
 
 ## 扩展思考题

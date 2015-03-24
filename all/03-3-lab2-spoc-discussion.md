@@ -108,7 +108,47 @@ va 0xce6c3f32, pa 0x007d4f32
 va 0xcd82c07c, pa 0x0c20907c, pde_idx 0x00000336, pde_ctx  0x00037003, pte_idx 0x0000002c, pte_ctx  0x0000c20b
 ```
 
-- [x]  
+- Answer:
+```
+va c2265b1f, pa d8f1b1f, pde_idx 308, pde_ctx: 9003, pte_idx 265, pte_cxt d8f1003
+va cc386bbc, pa 414cbbc, pde_idx 330, pde_ctx: 31003, pte_idx 386, pte_cxt 414c003
+va c7ed4d57, pa 7311d57, pde_idx 31f, pde_ctx: 20003, pte_idx 2d4, pte_cxt 7311003
+va ca6cecc0, pa c9e9cc0, pde_idx 329, pde_ctx: 2a003, pte_idx 2ce, pte_cxt c9e9003
+va c18072e8, pa 7412e8, pde_idx 306, pde_ctx: 7003, pte_idx 7, pte_cxt 741003
+va cd5f4b3a, pa 6ec9b3a, pde_idx 335, pde_ctx: 36003, pte_idx 1f4, pte_cxt 6ec9003
+va cc324c99, pa 8ac99, pde_idx 330, pde_ctx: 31003, pte_idx 324, pte_cxt 8a003
+va c7204e52, pa b8b6e52, pde_idx 31c, pde_ctx: 1d003, pte_idx 204, pte_cxt b8b6003
+va c3a90293, pa f1fd293, pde_idx 30e, pde_ctx: f003, pte_idx 290, pte_cxt f1fd003
+va ce6c3f32, pa 7d4f32, pde_idx 339, pde_ctx: 3a003, pte_idx 2c3, pte_cxt 7d4003
+```
+- Code:
+```
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	unsigned int n, va, pa, pde_idx, pde_ctx, pte_idx, pte_cxt;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> hex >> va >> pa;
+		cout << hex << "va " << va << ", pa " << pa;
+		pde_idx = va >> 22;
+		cout << hex << ", pde_idx " << pde_idx;
+		if (pde_idx >= 0x300 && pde_idx <= 0x363) {
+			pde_ctx = (pde_idx + 1 - 0x300) << 12 | 0x3;
+			cout << ", pde_ctx: " << pde_ctx;
+		}	
+		pte_idx = va >> 12 & 0x3FF;
+		cout << ", pte_idx " << pte_idx;
+		pte_cxt = pa >> 12 << 12 | 0x3;
+		cout << ", pte_cxt " << pte_cxt << endl;
+	}
+	return 0;
+}
+		
+```
 
 > 
 

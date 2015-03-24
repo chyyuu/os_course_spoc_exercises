@@ -30,7 +30,7 @@ x86保护模式中权限管理无处不在，下面哪些时候要检查访问�
  ```
 - [x]  
 
->  
+>  初始化GDT，完成段机制的建立，通过内存管理机制探测物理内存并建立页目录表和页表，设置CR0寄存器以使能页机制，对GDT进行再次初始化以适应页机制。
 
 ---
 
@@ -41,7 +41,8 @@ x86保护模式中权限管理无处不在，下面哪些时候要检查访问�
 
 - [x]  
 
-> 
+> 将kernel中intr_enable()的代码注释掉，可以发现qemu不再退出,因此可以推断,是由于打开中断导致的crash。
+  因为在代码trap.c中,我们需要对中断向量表进行初始化, 没有初始化直接打开中断就会导致crash。
 
 （2）(spoc)假定你已经完成了lab1的实验,接下来是对lab1的中断处理的回顾：请把你的学号对37(十进制)取模，得到一个数x（x的范围是-1<x<37），然后在你的答案的基础上，修init.c中的kern_init函数，在大约36行处，即
 
@@ -56,7 +57,38 @@ x86保护模式中权限管理无处不在，下面哪些时候要检查访问�
 
 - [x]  
 
-> 
+> 学号20120112777，取模得6，加入语句后输出结果如下：
+```
+trapframe at 0x7b5c
+  edi  0x00000001
+  esi  0x00000000
+  ebp  0x00007bc8
+  oesp 0x00007b7c
+  ebx  0x00010094
+  edx  0x000000a1
+  ecx  0x00000000
+  eax  0x000000ff
+  ds   0x----0010
+  es   0x----0010
+  fs   0x----0023
+  gs   0x----0023
+  trap 0x00000006 Invalid Opcode
+  err  0x00000000
+  eip  0x00100070
+  cs   0x----0008
+  flag 0x00000207 CF,PF,IF,IOPL=0
+kernel panic at kern/trap/trap.c:186:
+    unexpected trap in kernel.
+```
+可知这不是一个合法的中断号，触发了如下代码：
+```
+default:
+    // in kernel, it must be a mistake
+    if ((tf->tf_cs & 3) == 0) {
+        print_trapframe(tf);
+        panic("unexpected trap in kernel.\n");
+    }
+```
 
 （3）对于lab2的输出信息，请说明数字的含义
 ```

@@ -67,10 +67,13 @@ sys	0m0.000s
 
 （1）缺页异常可用于虚拟内存管理中。如果在中断服务例程中进行缺页异常的处理时，再次出现缺页异常，这时计算机系统（软件或硬件）会如何处理？请给出你的合理设计和解释。
 可以考虑允许异常嵌套。即在缺页异常处理程序时再发生异常，则嵌套递归执行。但是操作系统得确保嵌套的异常处理程序不会缺失同一个页，否则会死循环。
+实际上，中断服务例程一般是常住内存的，否则放在外面出问题则会宕机。
 
 （2）如果80386机器的一条机器指令(指字长4个字节)，其功能是把一个32位字的数据装入寄存器，指令本身包含了要装入的字所在的32位地址。这个过程最多会引起几次缺页中断？
 如果该指令存在内存中，按照$pc寄存其中的指令地址去取指，可能会有一次页缺失
 取到指令后，读取内存数据时，也可能会有一次页缺失。
+如果指令或数据的32字节横跨了两个page，那就会发生多次页缺失，则最多可能四次。
+再考虑页表缺失，最多可能出现6次。
 
 
 （3）(spoc) 有一台假想的计算机，页大小（page size）为32 Bytes，支持8KB的虚拟地址空间（virtual address space）,有4KB的物理内存空间（physical memory），采用二级页表，一个页目录项（page directory entry ，PDE）大小为1 Byte,一个页表项（page-table entries
@@ -87,7 +90,7 @@ PDE格式（8 bit） :
 其
 ```
 VALID==1表示，表示映射存在；VALID==0表示，表示内存映射不存在（有两种情况：a.对应的物理页帧swap out在硬盘上；b.既没有在内存中，页没有在硬盘上）。
-PFN6..0:页帧号
+PFN6..0:页帧号或外存中的后备页号
 PT6..0:页表的物理基址>>5
 
 虚地址13位
@@ -105,6 +108,8 @@ PDBR content: 0xd80
 
 请回答下列虚地址是否有合法对应的物理内存，请给出对应的pde index, pde contents, pte index, pte contents，the value of addr in phy page OR disk sector。
 ```
+程序见mmu2.cpp
+
 Virtual Address 6653:
 pde index: 0x19  pde  contentes:(valid 0 , pt  0x7f)
 Fault (page directory entry not valid)
@@ -120,8 +125,9 @@ Fault (page directory entry not valid)
 
 Virtual Address 0af6:
 pde index: 0x02  pde  contentes:(valid 1 , pt  0x21)
-pte index: 0x17  pte  contentes:(valid 0 , pfn  0x7f)
-To Disk Sector Address : 4086 value:4
+pte index: 0x13  pte  contentes:(valid 0 , pfn  0x7f)
+Fault (page table entry not valid) the pa is:4079
+
 
 Virtual Address 1e6f:
 pde index: 0x07  pde  contentes:(valid 1 , pt  0x3d)

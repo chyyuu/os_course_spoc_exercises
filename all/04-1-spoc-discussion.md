@@ -34,7 +34,6 @@ gcc -O0 -o goodlocality goodlocality.c
 time ./goodlocality
 ```
 可以看到其执行时间。
->
 ```
 答：将i,j调换，则会形成一个局部性差的例子，即：
 #include <stdio.h>

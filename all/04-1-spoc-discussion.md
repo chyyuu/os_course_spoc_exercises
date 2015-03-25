@@ -35,6 +35,27 @@ time ./goodlocality
 ```
 可以看到其执行时间。
 
+> 上述程序执行时间如下：
+
+```
+10485760 count computing over!
+
+real	0m0.201s
+user	0m0.081s
+sys	0m0.014s
+```
+  将A[i][j]换成A[j][i]后，更改了内存访问顺序，违背了局部性，执行时间如下：
+
+```
+10485760 count computing over!
+
+real	0m0.825s
+user	0m0.452s
+sys	0m0.039s
+```
+  可见速度明显下降，效率降低。
+
+
 ## 小组思考题目
 ----
 

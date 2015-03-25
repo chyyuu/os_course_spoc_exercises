@@ -10,6 +10,8 @@ NOTICE
 
 
 ## 个人思考题
+
+### 内存访问局部性的应用程序例子
 ---
 (1)(w4l2)下面是一个体现内存访问局部性好的简单应用程序例子，请参考，在linux中写一个简单应用程序，体现内存局部性差，并给出其执行时间。
 ```
@@ -73,24 +75,10 @@ Virtual Address 1e6f:
 
 回答可参考以如下表示：
 ```
-Virtual Address 7570:
-  --> pde index:0x1d  pde contents:(valid 1, pfn 0x33)
-    --> pte index:0xb  pte contents:(valid 0, pfn 0x7f)
-      --> Fault (page table entry not valid)
-      
-Virtual Address 21e1:
-  --> pde index:0x8  pde contents:(valid 0, pfn 0x7f)
-      --> Fault (page directory entry not valid)
-
-Virtual Address 7268:
-  --> pde index:0x1c  pde contents:(valid 1, pfn 0x5e)
-    --> pte index:0x13  pte contents:(valid 1, pfn 0x65)
-      --> Translates to Physical Address 0xca8 --> Value: 16
-
-Virtual Address 106f:
-  --> pde index:0x3  pde contents:(valid 1, pfn 0x2d)
-    --> pte index:0x14  pte contents:(valid 0, pfn 0x06)
-      --> To Disk Sector Address 0x167 --> Value: 2c
+Virtual Address 0330:
+  --> pde index:0x0  pde contents:(valid 1, pfn 0x61)
+    --> pte index:0x19  pte contents:(valid 1, pfn 0x63)
+      --> To Physical Address 0xc70 --> Value: 02
 ```
 
 ## 扩展思考题

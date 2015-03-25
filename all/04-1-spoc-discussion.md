@@ -140,6 +140,89 @@ Virtual Address 1e6f(0 001_11 10_011 0_1111):
       --> To Disk Sector Address 0x2cf(0001011001111) --> Value: 1c
 ```
 
+编写程序如下：
+```
+#include <fstream>
+using namespace std;
+
+int main() {
+    ifstream fin("page.txt");
+    char tmp[10];
+    unsigned int page[4096], disk[4096];
+    for (int i = 0; i < 128; i ++) {
+     	fin >> tmp;
+      	fin >> tmp;
+       	for (int j = 0; j < 32; j ++)
+         	fin >> hex >> page[i * 32 + j];
+    }
+    fin.close();
+    fin.open("disk.txt");
+    for (int i = 0; i < 128; i ++) {
+     	fin >> tmp;
+      	fin >> tmp;
+       	for (int j = 0; j < 32; j ++)
+         	fin >> hex >> disk[i * 32 + j];
+    }
+    fin.close();
+    fin.open("input.txt");
+    ofstream fout("output.txt");
+    const unsigned int PDBR = 0xd80;
+    unsigned int va, pde_idx, pde_ctt, pte_idx, pte_ctt, pa;
+    while (fin >> hex >> va) {
+ 		fout << "Virtual Address " << hex << va << ":\n";
+ 		pde_idx = (va >> 10);
+ 		pde_ctt = page[PDBR + pde_idx];
+ 		fout << "  --> pde index:0x" << hex << pde_idx << "  pde contents:(valid " 
+   			<< (pde_ctt >> 7) << ", pfn 0x" << hex << (pde_ctt & 0x7f) << ")\n";
+		if (pde_ctt >> 7) {
+    		pte_idx = (va >> 5) & 0x1f;
+    		pte_ctt = page[((pde_ctt & 0x7f) << 5) + pte_idx];
+    		fout << "    --> pte index:0x" << hex << pte_idx << "  pte contents:(valid "
+    			<< (pte_ctt >> 7) << ", pfn 0x" << hex << (pte_ctt & 0x7f) << ")\n";
+			pa = ((pte_ctt & 0x7f) << 5) + (va & 0x1f);
+			if (pte_ctt >> 7) {
+			    fout << "      --> To Physical Address 0x" << hex << pa
+			    	<< " --> Value: " << hex << page[pa] << endl;
+			} else {
+       			fout << "      --> To Disk Sector Address 0x" << hex << pa
+			    	<< " --> Value: " << hex << disk[pa] << endl;
+       		}        
+		} else {
+      		fout << "    --> Fault (page directory entry not valid)\n";
+    	}  		
+		fout << endl;
+    }    
+    fin.close();
+    fout.close();
+	return 0;   
+}    
+```
+运行结果如下：
+```
+Virtual Address 6653:
+  --> pde index:0x19  pde contents:(valid 0, pfn 0x7f)
+    --> Fault (page directory entry not valid)
+
+Virtual Address 1c13:
+  --> pde index:0x7  pde contents:(valid 1, pfn 0x3d)
+    --> pte index:0x0  pte contents:(valid 1, pfn 0x76)
+      --> To Physical Address 0xed3 --> Value: 12
+
+Virtual Address 6890:
+  --> pde index:0x1a  pde contents:(valid 0, pfn 0x7f)
+    --> Fault (page directory entry not valid)
+
+Virtual Address af6:
+  --> pde index:0x2  pde contents:(valid 1, pfn 0x21)
+    --> pte index:0x17  pte contents:(valid 0, pfn 0x7f)
+      --> To Disk Sector Address 0xff6 --> Value: 3
+
+Virtual Address 1e6f:
+  --> pde index:0x7  pde contents:(valid 1, pfn 0x3d)
+    --> pte index:0x13  pte contents:(valid 0, pfn 0x16)
+      --> To Disk Sector Address 0x2cf --> Value: 1c
+```
+
 ## 扩展思考题
 ---
 (1)请分析原理课的缺页异常的处理流程与lab3中的缺页异常的处理流程（分析粒度到函数级别）的异同之处。

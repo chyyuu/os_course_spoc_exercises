@@ -34,7 +34,41 @@ gcc -O0 -o goodlocality goodlocality.c
 time ./goodlocality
 ```
 可以看到其执行时间。
+>
+```
+答：将i,j调换，则会形成一个局部性差的例子，即：
+#include <stdio.h>
+#define NUM 1024
+#define COUNT 10
+int A[NUM][NUM];
+void main (void) {
+  int i,j,k;
+  for (k = 0; k<COUNT; k++)
+  for (i = 0; i < NUM; i++)
+  for (j = 0; j	 < NUM; j++)
+      A[j][i] = i+j;
+  printf("%d count computing over!\n",i*j*k);
+}
+运行原始代码并执行，得到如下结果：
+moocos-> time ./1
+10485760 count computing over!
 
+real	0m0.043s
+user	0m0.028s
+sys	0m0.005s
+
+运行我的改动代码，得到如下结果：
+10485760 count computing over!
+
+real	0m0.233s
+user	0m0.158s
+sys	0m0.011s
+
+可见，速度相差一个数量级。
+其原因在于，原始代码执行最内层循环的时候不会发生缺失（假设块足够大），但是改动后的代码最内层每次都会发生缺失，导致了速度上的差异
+[~]
+
+```
 ## 小组思考题目
 ----
 

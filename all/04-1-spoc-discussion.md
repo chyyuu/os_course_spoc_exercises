@@ -38,9 +38,14 @@ time ./goodlocality
 ## 小组思考题目
 ----
 
+### 缺页异常嵌套
+
 （1）缺页异常可用于虚拟内存管理中。如果在中断服务例程中进行缺页异常的处理时，再次出现缺页异常，这时计算机系统（软件或硬件）会如何处理？请给出你的合理设计和解释。
 
+### 缺页中断次数计算
 （2）如果80386机器的一条机器指令(指字长4个字节)，其功能是把一个32位字的数据装入寄存器，指令本身包含了要装入的字所在的32位地址。这个过程最多会引起几次缺页中断？
+
+### 虚拟页式存储的地址转换
 
 （3）(spoc) 有一台假想的计算机，页大小（page size）为32 Bytes，支持8KB的虚拟地址空间（virtual address space）,有4KB的物理内存空间（physical memory），采用二级页表，一个页目录项（page directory entry ，PDE）大小为1 Byte,一个页表项（page-table entries
 PTEs）大小为1 Byte，1个页目录表大小为32 Bytes，1个页表大小为32 Bytes。页目录基址寄存器（page directory base register，PDBR）保存了页目录表的物理地址（按页对齐）。
@@ -56,7 +61,7 @@ PDE格式（8 bit） :
 其
 ```
 VALID==1表示，表示映射存在；VALID==0表示，表示内存映射不存在（有两种情况：a.对应的物理页帧swap out在硬盘上；b.既没有在内存中，页没有在硬盘上）。
-PFN6..0:页帧号
+PFN6..0:页帧号或外存中的后备页号
 PT6..0:页表的物理基址>>5
 ```
 
@@ -75,10 +80,24 @@ Virtual Address 1e6f:
 
 回答可参考以如下表示：
 ```
-Virtual Address 0330:
-  --> pde index:0x0  pde contents:(valid 1, pfn 0x61)
-    --> pte index:0x19  pte contents:(valid 1, pfn 0x63)
-      --> To Physical Address 0xc70 --> Value: 02
+Virtual Address 7570:
+  --> pde index:0x1d  pde contents:(valid 1, pfn 0x33)
+    --> pte index:0xb  pte contents:(valid 0, pfn 0x7f)
+      --> Fault (page table entry not valid)
+      
+Virtual Address 21e1:
+  --> pde index:0x8  pde contents:(valid 0, pfn 0x7f)
+      --> Fault (page directory entry not valid)
+
+Virtual Address 7268:
+  --> pde index:0x1c  pde contents:(valid 1, pfn 0x5e)
+    --> pte index:0x13  pte contents:(valid 1, pfn 0x65)
+      --> Translates to Physical Address 0xca8 --> Value: 16
+
+Virtual Address 106f:
+  --> pde index:0x3  pde contents:(valid 1, pfn 0x2d)
+    --> pte index:0x14  pte contents:(valid 0, pfn 0x06)
+      --> To Disk Sector Address 0x167 --> Value: 2c
 ```
 
 ## 扩展思考题

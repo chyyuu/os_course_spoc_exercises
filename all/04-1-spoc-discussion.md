@@ -33,6 +33,34 @@ time ./goodlocality
 ```
 可以看到其执行时间。
 
+- 执行提供的代码，得到的输出结果如下：
+```
+moocos-> gcc -O0 -o 1 1.c
+[~]
+moocos-> time ./1
+10485760 count computing over!
+
+real	0m0.155s
+user	0m0.041s
+sys	0m0.008s
+[~]
+
+```
+- 改变访问顺序为A[j][i] 得到的结果为：
+```
+moocos-> gcc -O0 -o 1 1.c
+[~]
+moocos-> time ./1
+10485760 count computing over!
+
+real	0m0.514s
+user	0m0.220s
+sys	0m0.018s
+[~]
+
+```
+- 可以看到两者时间差别比较大。
+
 ## 小组思考题目
 ----
 
@@ -91,6 +119,89 @@ Virtual Address 106f:
   --> pde index:0x3  pde contents:(valid 1, pfn 0x2d)
     --> pte index:0x14  pte contents:(valid 0, pfn 0x06)
       --> To Disk Sector Address 0x167 --> Value: 2c
+```
+- 执行代码：
+```
+#include <fstream>
+using namespace std;
+
+int main() {
+    ifstream fin("page");
+    char tmp[10];
+    unsigned int page[4096], disk[4096];
+    for (int i = 0; i < 128; i ++) {
+        fin >> tmp;
+        fin >> tmp;
+        for (int j = 0; j < 32; j ++)
+            fin >> hex >> page[i * 32 + j];
+    }
+    fin.close();
+    fin.open("disk");
+    for (int i = 0; i < 128; i ++) {
+        fin >> tmp;
+        fin >> tmp;
+        for (int j = 0; j < 32; j ++)
+            fin >> hex >> disk[i * 32 + j];
+    }
+    fin.close();
+    fin.open("input.txt");
+    ofstream fout("output.txt");
+    const unsigned int PDBR = 0xd80;
+    unsigned int va, pde_idx, pde_ctt, pte_idx, pte_ctt, pa;
+    while (fin >> hex >> va) {
+        fout << "Virtual Address " << hex << va << ":\n";
+        pde_idx = (va >> 10);
+        pde_ctt = page[PDBR + pde_idx];
+        fout << "  --> pde index:0x" << hex << pde_idx << "  pde contents:(valid " 
+            << (pde_ctt >> 7) << ", pfn 0x" << hex << (pde_ctt & 0x7f) << ")\n";
+        if (pde_ctt >> 7) {
+            pte_idx = (va >> 5) & 0x1f;
+            pte_ctt = page[((pde_ctt & 0x7f) << 5) + pte_idx];
+            fout << "    --> pte index:0x" << hex << pte_idx << "  pte contents:(valid "
+                << (pte_ctt >> 7) << ", pfn 0x" << hex << (pte_ctt & 0x7f) << ")\n";
+            pa = ((pte_ctt & 0x7f) << 5) + (va & 0x1f);
+            if (pte_ctt >> 7) {
+                fout << "      --> To Physical Address 0x" << hex << pa
+                    << " --> Value: " << hex << page[pa] << endl;
+            } else {
+                fout << "      --> To Disk Sector Address 0x" << hex << pa
+                    << " --> Value: " << hex << disk[pa] << endl;
+            }        
+        } else {
+            fout << "    --> Fault (page directory entry not valid)\n";
+        }       
+        fout << endl;
+    }    
+    fin.close();
+    fout.close();
+    return 0;   
+}  
+```
+- 运行结果：
+```
+Virtual Address 6653:
+  --> pde index:0x19  pde contents:(valid 0, pfn 0x7f)
+    --> Fault (page directory entry not valid)
+
+Virtual Address 1c13:
+  --> pde index:0x7  pde contents:(valid 1, pfn 0x3d)
+    --> pte index:0x0  pte contents:(valid 1, pfn 0x76)
+      --> To Physical Address 0xed3 --> Value: 12
+
+Virtual Address 6890:
+  --> pde index:0x1a  pde contents:(valid 0, pfn 0x7f)
+    --> Fault (page directory entry not valid)
+
+Virtual Address af6:
+  --> pde index:0x2  pde contents:(valid 1, pfn 0x21)
+    --> pte index:0x17  pte contents:(valid 0, pfn 0x7f)
+      --> To Disk Sector Address 0xff6 --> Value: 3
+
+Virtual Address 1e6f:
+  --> pde index:0x7  pde contents:(valid 1, pfn 0x3d)
+    --> pte index:0x13  pte contents:(valid 0, pfn 0x16)
+      --> To Disk Sector Address 0x2cf --> Value: 1c
+
 ```
 
 ## 扩展思考题

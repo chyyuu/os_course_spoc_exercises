@@ -10,108 +10,108 @@
 
 模拟实现代码及测试如下：
     #include <iostream>
-#include <cstdlib>
-#include <stack>
-using namespace std;
-
-//LRU算法，采用活动页面栈方式实现
-
-
-//访问页面栈
-class PageStack {
-    public:
-        PageStack(int memsize);
-        ~PageStack();
-        void visit(int pagenum); //访问某一页，按页号进行
-        void showMemory(); //查看内存状态
-
-    private:
-        int* Memory;
-        int MemSize;
-        int currentpagenum;
-        int push(int pagenum);
-};
-
-PageStack::PageStack(int memsize) {
-    Memory = new int[memsize];
-    currentpagenum = 0;
-    MemSize = memsize;
-}
-
-PageStack::~PageStack() {
-    delete Memory;
-
-}
-
-void PageStack::showMemory() {
-    for (int i=currentpagenum-1; i>=0; i--) {
-        cout << "|" << Memory[i] << "|" << endl;
+    #include <cstdlib>
+    #include <stack>
+    using namespace std;
+    
+    //LRU算法，采用活动页面栈方式实现
+    
+    
+    //访问页面栈
+    class PageStack {
+        public:
+            PageStack(int memsize);
+            ~PageStack();
+            void visit(int pagenum); //访问某一页，按页号进行
+            void showMemory(); //查看内存状态
+    
+        private:
+            int* Memory;
+            int MemSize;
+            int currentpagenum;
+            int push(int pagenum);
+    };
+    
+    PageStack::PageStack(int memsize) {
+        Memory = new int[memsize];
+        currentpagenum = 0;
+        MemSize = memsize;
     }
-    cout << "_________________________" << endl;
-}
-
-int PageStack::push(int pagenum) {
-    if (currentpagenum<MemSize) {
-        Memory[currentpagenum++] = pagenum;
-    } else { //删除栈底元素
-        for (int i=0; i<MemSize-1; i++) {
-            Memory[i] = Memory[i+1];
+    
+    PageStack::~PageStack() {
+        delete Memory;
+    
+    }
+    
+    void PageStack::showMemory() {
+        for (int i=currentpagenum-1; i>=0; i--) {
+            cout << "|" << Memory[i] << "|" << endl;
         }
-        Memory[MemSize-1] = pagenum;
-
+        cout << "_________________________" << endl;
     }
-}
-
-void PageStack::visit(int pagenum) {
-    //先查找栈中是否有该元素
-    //为简单起见，直接线性查找
-    bool has = 0;
-    int index = 0;
-    for (int i=0; i<currentpagenum; i++) {
-        if (Memory[i] == pagenum) {
-            has = 1;
-            index = i;
-            break;
+    
+    int PageStack::push(int pagenum) {
+        if (currentpagenum<MemSize) {
+            Memory[currentpagenum++] = pagenum;
+        } else { //删除栈底元素
+            for (int i=0; i<MemSize-1; i++) {
+                Memory[i] = Memory[i+1];
+            }
+            Memory[MemSize-1] = pagenum;
+    
         }
     }
-
-    if (has) { //若page存在，则放到栈顶
-        int visitpage = Memory[index];
-        for (int i=index; i<currentpagenum-1; i++) {
-            Memory[i] = Memory[i+1];
+    
+    void PageStack::visit(int pagenum) {
+        //先查找栈中是否有该元素
+        //为简单起见，直接线性查找
+        bool has = 0;
+        int index = 0;
+        for (int i=0; i<currentpagenum; i++) {
+            if (Memory[i] == pagenum) {
+                has = 1;
+                index = i;
+                break;
+            }
         }
-        Memory[currentpagenum-1] = pagenum;
-
-    } else { //否则，直接push
-        cout << "page fault" << endl;
-        push(pagenum);
+    
+        if (has) { //若page存在，则放到栈顶
+            int visitpage = Memory[index];
+            for (int i=index; i<currentpagenum-1; i++) {
+                Memory[i] = Memory[i+1];
+            }
+            Memory[currentpagenum-1] = pagenum;
+    
+        } else { //否则，直接push
+            cout << "page fault" << endl;
+            push(pagenum);
+        }
     }
-}
-
-int main() {
-    PageStack mystack(4);
-    mystack.visit(2);
-    mystack.showMemory();
-    mystack.visit(0);
-    mystack.showMemory();
-    mystack.visit(3);
-    mystack.showMemory();
-    mystack.visit(1);
-    mystack.showMemory();
-    mystack.visit(4);
-    mystack.showMemory();
-    mystack.visit(1);
-    mystack.showMemory();
-    mystack.visit(0);
-    mystack.showMemory();
-    mystack.visit(1);
-    mystack.showMemory();
-    mystack.visit(2);
-    mystack.showMemory();
-    mystack.visit(3);
-    mystack.showMemory();
-    return 0;
-}
+    
+    int main() {
+        PageStack mystack(4);
+        mystack.visit(2);
+        mystack.showMemory();
+        mystack.visit(0);
+        mystack.showMemory();
+        mystack.visit(3);
+        mystack.showMemory();
+        mystack.visit(1);
+        mystack.showMemory();
+        mystack.visit(4);
+        mystack.showMemory();
+        mystack.visit(1);
+        mystack.showMemory();
+        mystack.visit(0);
+        mystack.showMemory();
+        mystack.visit(1);
+        mystack.showMemory();
+        mystack.visit(2);
+        mystack.showMemory();
+        mystack.visit(3);
+        mystack.showMemory();
+        return 0;
+    }
 
 
 ## 扩展思考题

@@ -9,6 +9,7 @@
 (2)（spoc）根据你的`学号 mod 4`的结果值，确定选择四种替换算法（0：LRU置换算法，改进的clock 页置换算法，1：工作集页置换算法，2：缺页率置换算法）中的一种来设计一个应用程序（可基于python, ruby, C, C++，LISP等）模拟实现，并给出测试。请参考附件代码或独自实现。
 
 模拟实现代码及测试如下：
+
     #include <iostream>
     #include <cstdlib>
     #include <stack>

@@ -35,7 +35,60 @@
 
 (2)（spoc）根据你的`学号 mod 4`的结果值，确定选择四种替换算法（0：LRU置换算法，1:改进的clock 页置换算法，2：工作集页置换算法，3：缺页率置换算法）中的一种来设计一个应用程序（可基于python, ruby, C, C++，LISP等）模拟实现，并给出测试。请参考如python代码或独自实现。
  - [页置换算法实现的参考实例](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab3/page-replacement-policy.py)
- 
+
+```
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
+using namespace std;
+
+int main()
+{
+    int cache[100], tag[100];
+    for (int i = 0; i < 100; cache[i++] = -1);
+    int  window = 4, page, size = 0;
+    bool hit;
+    while (1)
+    {
+        hit = 0;
+        cin >> page;
+        if (page < 0)
+            break; 
+        for (int i = 0; i < size; i++)
+        {
+            tag[i]++;
+            if (cache[i] == page)
+            {
+                printf("page hit\n");
+                tag[i] = 0;
+                hit = 1;
+            }
+            else if (tag[i] >= window)
+            {
+                cache[i] = cache[size-1];
+                tag[i] = tag[size-1];
+                size--;
+                i--;
+            }
+        }
+        if (hit == 0)
+        {
+            printf("page miss\n");
+            cache[size] = page;
+            tag[size] = 0;
+            size++;
+        }
+        for (int i = 0; i < size; i++)
+        {
+            printf("{%d, %d}, ", cache[i], tag[i]);
+        } 
+        printf("\n"); 
+    }
+
+    return 0;
+}
+```
+
 ## 扩展思考题
 （1）了解LIRS页置换算法的设计思路，尝试用高级语言实现其基本思路。此算法是江松博士（导师：张晓东博士）设计完成的，非常不错！
 

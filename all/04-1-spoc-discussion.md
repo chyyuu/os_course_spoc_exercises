@@ -34,6 +34,20 @@ gcc -O0 -o goodlocality goodlocality.c
 time ./goodlocality
 ```
 可以看到其执行时间。
+>   直接运行程序可以得到
+		moocos-> time ./goodlocality
+		10485760 count computing over;
+		real    0m0.070s
+		user    0m0.030s
+		sys    0m0.004s
+		将程序中A[i][j]改成A[j][i]后得到
+		moocos-> time ./goodlocality
+		10485760 count computing over!
+		real    0m0.278s
+		user    0m0.136s
+		sys    0m0.013s
+		
+		可见计算顺序对于运行时间是很重要的，由于按行计算比按列计算耗时更短，由此可以推出系统是按行储存数组的
 
 ## 小组思考题目
 ----
@@ -118,7 +132,26 @@ Virtual Address 1e6f(0 001_11 10_011 0_1111):
            0d 15 0a 1a 0c 12 1e 11 0e 02 1d 10 15 14 07 13
       --> To Disk Sector Address 0x2cf(0001011001111) --> Value: 1c
 ```
-
+>	答：
+		（1）Virtual Address 6653:
+			  --> pde index:0x19 pde contents:(0x7f, valid 0) 
+				-->Fault	
+		（2）Virtual Address 1c13:
+			 --> pde index:0x7 pde contents:(0xbd, valid 1, pfn 0x3d)
+			  --> pte index:0x0 pte contents:(0xf6, valid 1, pfn 0x76)
+			   --> To Physical Address 0xed3 --> Value: 0x12
+		（3）Virtual Address 6890:
+			--> pde index:0x1a pde contents:(0x7f, valid 0)
+			  --> Fault
+		（4）Virtual Address 0af6:
+			--> pde index:0x2 pde contents:(0xa1, valid 1, pfn 0x21)
+			  --> pte index:0x17 pte contents:(0x7f, valid 0, pfn 0x7f)
+				--> To Disk Sector Address 0xff6 --> Value: 0x3
+		（5）Virtual Address 1e6f:
+			--> pde index:0x7 pde contents:(0xbd, valid 1, pfn 0x3d)
+			  --> pte index:0x13 pte contents:(0x16, valid 0, pfn 0x16)
+				--> To Disk Sector Address 0x2cf --> Value: 0x1c
+				
 ## 扩展思考题
 ---
 (1)请分析原理课的缺页异常的处理流程与lab3中的缺页异常的处理流程（分析粒度到函数级别）的异同之处。

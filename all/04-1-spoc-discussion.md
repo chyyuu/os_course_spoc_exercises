@@ -40,9 +40,11 @@ time ./goodlocality
 		real    0m0.070s
 		user    0m0.030s
 		sys    0m0.004s
+		
 		将程序中A[i][j]改成A[j][i]后得到
 		moocos-> time ./goodlocality
 		10485760 count computing over!
+		
 		real    0m0.278s
 		user    0m0.136s
 		sys    0m0.013s
@@ -136,17 +138,21 @@ Virtual Address 1e6f(0 001_11 10_011 0_1111):
 		（1）Virtual Address 6653:
 			  --> pde index:0x19 pde contents:(0x7f, valid 0) 
 				-->Fault	
+		
 		（2）Virtual Address 1c13:
 			 --> pde index:0x7 pde contents:(0xbd, valid 1, pfn 0x3d)
 			  --> pte index:0x0 pte contents:(0xf6, valid 1, pfn 0x76)
 			   --> To Physical Address 0xed3 --> Value: 0x12
+		
 		（3）Virtual Address 6890:
 			--> pde index:0x1a pde contents:(0x7f, valid 0)
 			  --> Fault
+		
 		（4）Virtual Address 0af6:
 			--> pde index:0x2 pde contents:(0xa1, valid 1, pfn 0x21)
 			  --> pte index:0x17 pte contents:(0x7f, valid 0, pfn 0x7f)
 				--> To Disk Sector Address 0xff6 --> Value: 0x3
+		
 		（5）Virtual Address 1e6f:
 			--> pde index:0x7 pde contents:(0xbd, valid 1, pfn 0x3d)
 			  --> pte index:0x13 pte contents:(0x16, valid 0, pfn 0x16)

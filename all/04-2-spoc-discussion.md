@@ -31,6 +31,7 @@
 
 ----
 (1)（spoc）请证明为何LRU算法不会出现belady现象
+思路：LRU是一个栈，证明页数多后缺页率不上升。等于没说……因为FIFO是有belady现象的，可以比较一下LRU和belady的区别，看看有什么能导致belady现象的。
 
 
 <<<<<<< HEAD

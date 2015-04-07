@@ -22,9 +22,13 @@ NOTICE
 ### 11.3 进程状态
 
 - 进程生命周期中的相关事件有些什么？它们对应的进程状态变化是什么？
+
 - 进程切换过程中的几个关键代码分析
+
 - 时钟中断触发调度函数的启动
+
 - 当前进程的现场保存代码
+
 - 进程切换代码
 　＞　下一个运行进程的现场恢复
 
@@ -49,6 +53,8 @@ NOTICE
 ## SPOC小组思考题
 
 (1) (spoc)设计一个简化的进程管理子系统，可以管理并调度如下简化进程.给出了[参考代码](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab4/process-concept-homework.py)，请理解代码，并完成＂YOUR CODE"部分的内容．　可２个人一组
+
+代码见该目录下process.py
 
 ### 进程的状态 
 

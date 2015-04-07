@@ -68,7 +68,10 @@ NOTICE
 
 
 ### 进程调度
- - 使用FIFO/FCFS：先来先服务
+ - 使用FIFO/FCFS：先来先服务,
+   - 先查找位于proc_info队列的curr_proc元素(当前进程)之后的进程(curr_proc+1..end)是否处于READY态，
+   - 再查找位于proc_info队列的curr_proc元素(当前进程)之前的进程(begin..curr_proc-1)是否处于READY态
+   - 如都没有，继续执行curr_proc直到结束
 
 ### 关键模拟变量
  - 进程控制块
@@ -79,13 +82,19 @@ PROC_ID = 'pid_'
 PROC_STATE = 'proc_state_'
 ```
  - 当前进程 curr_proc 
- - 进程列表：proc_info 描述了进程的行为特征：（１）使用CPU ;(2)等待I/O
+ - 进程列表：proc_info是就绪进程的队列（list），
+ - 在命令行（如下所示）需要说明每进程的行为特征：（１）使用CPU ;(2)等待I/O
 ```
    -l PROCESS_LIST, --processlist= X1:Y1,X2:Y2,...
    X 是进程的执行指令数; 
    Ｙ是执行CPU的比例(0..100) ，如果是100，表示不会发出yield操作
 ```
  - 进程切换行为：系统决定何时(when)切换进程:进程结束或进程发出yield请求
+
+### 进程执行
+```
+instruction_to_execute = self.proc_info[self.curr_proc][PROC_CODE].pop(0)
+```
 
 ### 关键函数
  - 系统执行过程：run

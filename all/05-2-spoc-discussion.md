@@ -11,13 +11,18 @@ need_resched
 wait_state
 run_link、list_link、hash_link
 ```
+proc.h中定义
+
+###一个进程有两个堆栈，一个用户态，一个内核态，切换时由用户态转为内核态，但是内核不是一个单独的进程。区别是不是同一个进程看地址空间是不是同一个，即cr3是不是一样，在proc_run中，切换时不涉及cr3的改变，所以操作系统负责切换的内核不是一个单独的进程。不同的进程，内核空间是一样的，用户空间不一样。如果是内核态发生中断，就不涉及栈的切换
+
+
 
 ### 进程创建
 
 (1)fork()的返回值是唯一的吗？父进程和子进程的返回值是不同的。请找到相应的赋值代码。
 
 (2)新进程创建时的进程标识是如何设置的？请指明相关代码。
-
+Queue，先进先出
 (3)fork()的例子中进程标识的赋值顺序说明进程的执行顺序。
 
 (4)请在ucore启动时显示空闲进程（idleproc）和初始进程（initproc）的进程标识。
@@ -33,6 +38,8 @@ run_link、list_link、hash_link
 (3)试分析sleep()系统调用的实现。在什么地方设置的定时器？它对应的等待队列是哪个？它的唤醒操作在什么地方？
 
 ## SPOC小组思考题
+
+见本目录下process2.py
 
 (1) (spoc)设计一个简化的进程管理子系统，可以管理并调度如下简化进程.给出了[参考代码](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab5/process-cpuio-homework.py)，请理解代码，并完成＂YOUR CODE"部分的内容．　可２个人一组
 

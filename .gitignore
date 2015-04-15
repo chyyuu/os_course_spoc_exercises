@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Node rules:
 ## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
@@ -17,3 +18,27 @@ _book
 
 # swap
 *~
+=======
+*~
+obj/
+bin/
+.gdb.in
+.qemu.out
+cscope.*
+ncscope.*
+tags
+*swp
+.cproject
+.project
+*.bak
+*.org
+.codelite
+*.project
+*.workspace
+a.out
+*.log
+*.exe
+chytesting
+disk0
+*.orig
+>>>>>>> 84c96b3c3df40b3255d436150990143a642e5abd

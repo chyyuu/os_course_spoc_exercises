@@ -1,4 +1,6 @@
+
 # lab3 SPOC思考题
+
 
 此次有同组的另一位同学负责提交
 git地址为：https://github.com/cruiceble/os_exercises
@@ -104,6 +106,8 @@ NOTICE
  
  
  
+=======
+>>>>>>> 8c3232045810fbd8ae261accb0adcddd8b0dbc42
 =======
 # lab3 SPOC思考题
 

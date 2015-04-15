@@ -27,7 +27,7 @@
     * [lec10 SPOC讨论](all/05-1-spoc-discussion.md)
     * [lec11 SPOC讨论](all/05-2-spoc-discussion.md)
     * [lab4 SPOC讨论](all/05-3-lab4-spoc-discussion.md)
-    * [lab6 SPOC讨论](all/05-4-lab5-spoc-discussion.md)    
+    * [lab5 SPOC讨论](all/05-4-lab5-spoc-discussion.md)    
 * [CPU调度](all/8-sched.md)
 * [同步](all/9-sync.md)
 * [信号量](all/10-sem.md)

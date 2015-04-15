@@ -59,12 +59,13 @@ Queue，先进先出
 ```
 
 ### 进程调度
- - 使用FIFO/FCFS：先来先服务,
+ - 使用FIFO/FCFS：先来先服务, 只有进程done, yield, io时才会执行切换
    - 先查找位于proc_info队列的curr_proc元素(当前进程)之后的进程(curr_proc+1..end)是否处于READY态，
    - 再查找位于proc_info队列的curr_proc元素(当前进程)之前的进程(begin..curr_proc-1)是否处于READY态
    - 如都没有，继续执行curr_proc直到结束
 
 ### 关键模拟变量
+ - io_length : IO操作的执行时间
  - 进程控制块
 ```
 PROC_CODE = 'code_'

@@ -46,6 +46,8 @@
 
 https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with-grub2-in-udisk.md
 
+> 注意，grub_kernel的源码在ucore_lab的lab1_X的git branch上，位于 `ucore_lab/labcodes_answer/lab1_result`
+
 (报告可课后完成)请理解grub multiboot spec的含义，并分析ucore_lab是如何实现符合grub multiboot spec的，并形成spoc练习报告。
 
 ### (2)(spoc) 理解用户程的生命周期。
@@ -53,6 +55,7 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 > 需写练习报告和简单编码，完成后放到git server 对应的git repo中
 
 ### 练习用的[lab5 spoc exercise project source code](https://github.com/chyyuu/ucore_lab/tree/master/related_info/lab5/lab5-spoc-discuss)
+
 
 #### 掌握知识点
 1. 用户进程的启动、运行、就绪、等待、退出

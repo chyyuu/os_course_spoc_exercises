@@ -206,6 +206,7 @@ proc_run(struct proc_struct *proc) {
     if (proc != current) {
         bool intr_flag;
         struct proc_struct *prev = current, *next = proc;
+        cprintf("In proc_run, switch form kernel thread %s to kernel thread %s\n",proc->parent->name, proc->name);
         local_intr_save(intr_flag);
         {
             current = proc;
@@ -257,6 +258,9 @@ find_proc(int pid) {
 //       proc->tf in do_fork-->copy_thread function
 int
 kernel_thread(int (*fn)(void *), void *arg, uint32_t clone_flags) {
+	if (arg != NULL && strcmp("I am A",(char*)arg) == 0) {
+		cprintf("In kernel_thread, kernel thread A is being created,the trapframe of A is to be created!\n");
+	}
     struct trapframe tf;
     memset(&tf, 0, sizeof(struct trapframe));
     tf.tf_cs = KERNEL_CS;
@@ -264,6 +268,7 @@ kernel_thread(int (*fn)(void *), void *arg, uint32_t clone_flags) {
     tf.tf_regs.reg_ebx = (uint32_t)fn;
     tf.tf_regs.reg_edx = (uint32_t)arg;
     tf.tf_eip = (uint32_t)kernel_thread_entry;
+    cprintf("In kernel_thread,the  trapframe of A has been created! It's going to use do_fork\n");
     return do_fork(clone_flags | CLONE_VM, 0, &tf);
 }
 
@@ -406,6 +411,11 @@ do_fork(uint32_t clone_flags, uintptr_t stack, struct trapframe *tf) {
     if ((proc = alloc_proc()) == NULL) {
         goto fork_out;
     }
+    if ((char*)tf->tf_regs.reg_edx != NULL && strcmp("I am A",(char*)tf->tf_regs.reg_edx) == 0) {
+    	strcpy(proc->name,(char*)tf->tf_regs.reg_edx);
+
+    }
+    cprintf("In do_fork, kernel thread  %s PCB(proc_struct) has been allocated!\n", proc->name);
 
     proc->parent = current;
     assert(current->wait_state == 0);
@@ -413,10 +423,23 @@ do_fork(uint32_t clone_flags, uintptr_t stack, struct trapframe *tf) {
     if (setup_kstack(proc) != 0) {
         goto bad_fork_cleanup_proc;
     }
+
+    cprintf("In do_fork, kernel thread %s  kernel stack has been allocated!\n", proc->name);
+
     if (copy_mm(clone_flags, proc) != 0) {
         goto bad_fork_cleanup_kstack;
     }
+
+    cprintf("In do_fork, kernel thread %s memory has been copied!\n", proc->name);
+
+
+
     copy_thread(proc, stack, tf);
+
+
+   cprintf("In do_fork, kernel thread %s  trapframe has been setted to the stack!\n",proc->name);
+
+
 
     bool intr_flag;
     local_intr_save(intr_flag);
@@ -426,7 +449,12 @@ do_fork(uint32_t clone_flags, uintptr_t stack, struct trapframe *tf) {
         set_links(proc);
 
     }
+
     local_intr_restore(intr_flag);
+
+    cprintf("In do_fork, kernel thread %s  the PCB has been added into the proc_list!\n", proc->name);
+
+     cprintf("In do_fork, %s is going to be waked up!!\n", proc->name);
 
     wakeup_proc(proc);
 
@@ -453,7 +481,7 @@ do_exit(int error_code) {
     if (current == initproc) {
         panic("initproc exit.\n");
     }
-    
+    cprintf("In do_exit, user process %s is gotiong to exit, and its resources will be called back!\n", current->name);
     struct mm_struct *mm = current->mm;
     if (mm != NULL) {
         lcr3(boot_cr3);
@@ -493,7 +521,6 @@ do_exit(int error_code) {
         }
     }
     local_intr_restore(intr_flag);
-    
     schedule();
     panic("do_exit will not return!! %d.\n", current->pid);
 }
@@ -507,7 +534,7 @@ load_icode(unsigned char *binary, size_t size) {
     if (current->mm != NULL) {
         panic("load_icode: current->mm must be empty.\n");
     }
-
+    cprintf("In load_icode, user programmer is to be loaded\n", current->name);
     int ret = -E_NO_MEM;
     struct mm_struct *mm;
     //(1) create a new mm for current process
@@ -635,6 +662,7 @@ load_icode(unsigned char *binary, size_t size) {
     tf->tf_eip = elf->e_entry;
     tf->tf_eflags = FL_IF;
     ret = 0;
+    cprintf("In load_icode, the mm and stack of user programmer has been setted", current->name);
 out:
     return ret;
 bad_cleanup_mmap:
@@ -671,12 +699,14 @@ do_execve(const char *name, size_t len, unsigned char *binary, size_t size) {
             mm_destroy(mm);
         }
         current->mm = NULL;
+        cprintf("In do_execve mm of %s has been cleaned up!!\n", current->name);
     }
     int ret;
     if ((ret = load_icode(binary, size)) != 0) {
         goto execve_exit;
     }
     set_proc_name(current, local_name);
+    cprintf("In do_execve user programmed has been loaded, now it's user thread %s. It's going to do user function!\n", current->name);
     return 0;
 
 execve_exit:
@@ -814,6 +844,17 @@ user_main(void *arg) {
     panic("user_main execve failed.\n");
 }
 
+static int
+user_main2(void *arg) {
+	cprintf("Now kernel thread %s is running, it's going to do execve!\n", current->name);
+#ifdef TEST
+    KERNEL_EXECVE2(TEST, TESTSTART, TESTSIZE);
+#else
+    KERNEL_EXECVE(hello);
+#endif
+    panic("user_main execve failed.\n");
+}
+
 // init_main - the second kernel thread used to create user_main kernel threads
 static int
 init_main(void *arg) {
@@ -821,7 +862,9 @@ init_main(void *arg) {
     size_t kernel_allocated_store = kallocated();
 
     int pid = kernel_thread(user_main, NULL, 0);
-    if (pid <= 0) {
+    cprintf("In init_main(), kernel thread A is going to be created!\n");
+    int pid2 = kernel_thread(user_main2,"I am A", 0);
+    if (pid <= 0 || pid2<=0) {
         panic("create user_main failed.\n");
     }
 

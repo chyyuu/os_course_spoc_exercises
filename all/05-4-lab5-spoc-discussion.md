@@ -70,4 +70,52 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 阅读代码，在现有基础上再增加一个用户进程A，并通过增加cprintf函数到ucore代码中，
 能够把个人思考题和上述知识点中的内容展示出来：即在ucore运行过程中通过`cprintf`函数来完整地展现出来进程A相关的动态执行和内部数据/状态变化的细节。(越全面细致越好)
 
+在lab5中的UCore用户进程从开始创建到退出,有如下几个阶段:
+
+1. 由initproc在其执行函数init_main中调用kernel_thread函数创建一个内核线程,该内个线程为用户进程的壳
+
+2.initproc挂起,进入wait状态,等待创建的子线程执行
+
+3.内核子线程执行其执行函数user_main,user_main通过调用__KERNEL_EXECVE等函数,最用调用系统函数SYS_exec执行,其服务例程为do_execve,do_execve清空原线程mm,再调用load_icode
+
+4. load_icode从内存(由于没有文件系统,此时用户函数已在内存中)中加载用户函数,并设置用户态的内存空间和栈.然后设置trapframe到刚建立的用户态空间
+
+5.系统调用逐层返回,恢复中断,转到之前设置的eip,即用户函数的入口开始执行
+
+6.用户函数执行完后,return,退出,执行系统函数do_exit,回收相关资源,并调度其他进程
+
+在本次练习的UCore代码中,让原来创建的用户线程执行user/exit.c,再创建另一个用户进程,其执行的代码是user/hello.c中的内容,命名为用户进程A.具体程序代码见该目录下lab5-spoc-discuss中相应的内容,cprint打印出的信息如下,可以看到,从内核线程init开始,到创建内核线程A,再在A的内核函数中执行execve,加载hello.c,执行完毕后退出的过程.
+
+    In proc_run, switch form kernel thread idle to kernel thread init
+    In kernel_thread,the  trapframe of A has been created! It's going to use do_fork
+    In do_fork, kernel thread   PCB(proc_struct) has been allocated!
+    In do_fork, kernel thread   kernel stack has been allocated!
+    In do_fork, kernel thread  memory has been copied!
+    In do_fork, kernel thread   trapframe has been setted to the stack!
+    In do_fork, kernel thread   the PCB has been added into the proc_list!
+    In do_fork,  is going to be waked up!!
+    In wakeup_proc,  has been waked up!!
+    In init_main(), kernel thread A is going to be created!
+    In kernel_thread, kernel thread A is being created,the trapframe of A is to be created!
+    In kernel_thread,the  trapframe of A has been created! It's going to use do_fork
+    In do_fork, kernel thread  I am A PCB(proc_struct) has been allocated!
+    In do_fork, kernel thread I am A  kernel stack has been allocated!
+    In do_fork, kernel thread I am A memory has been copied!
+    In do_fork, kernel thread I am A  trapframe has been setted to the stack!
+    In do_fork, kernel thread I am A  the PCB has been added into the proc_list!
+    In do_fork, I am A is going to be waked up!!
+    In wakeup_proc, I am A has been waked up!!
+    In proc_run, switch form kernel thread init to kernel thread I am A
+    Now kernel thread I am A is running, it's going to do execve!
+    kernel_execve: pid = 3, name = "hello".
+    In load_icode, user programmer is to be loaded
+    In load_icode, the mm and stack of user programmer has been settedIn do_execve user programmed has been loaded, now it's user thread hello. It's going to do user function!
+    Hello world!!.
+    I am user process A, my pid is 3.
+    hello pass.
+    In do_exit, user process hello is gotiong to exit, and its resources will be called back!
+    In wakeup_proc, init has been waked up!!
+    In proc_run, switch form kernel thread init to kernel thread 
+    kernel_execve: pid = 2, name = "exit".
+    
 请完成如下练习，完成代码填写，并形成spoc练习报告

@@ -18,6 +18,7 @@ wakeup_proc(struct proc_struct *proc) {
             warn("wakeup runnable process.\n");
         }
     }
+    cprintf("In wakeup_proc, %s has been waked up!!\n", proc->name);
     local_intr_restore(intr_flag);
 }
 

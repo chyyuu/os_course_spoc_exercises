@@ -48,6 +48,15 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 
 (报告可课后完成)请理解grub multiboot spec的含义，并分析ucore_lab是如何实现符合grub multiboot spec的，并形成spoc练习报告。
 
+
+grub（GRand Unified Bootloader）是一个多操作系统启动程序。
+grub是多启动规范的实现，它允许用户可以在计算机内同时拥有多个操作系统，并在计算机启动时选择希望运行的操作系统。
+grub可用于选择操作系统分区上的不同内核，也可用于向这些内核传递启动参数。
+Multiboot Specification 是一个描述bootloader如何加载x86的操作系统内核的开放性规范。
+ucore把原先的bootloader去掉，添加了一段用于配合multiboot的启动代码。
+这段代码主要是开启了保护模式，清理了页表，关闭了SSE指令集，保存了来自grub的启动参数，然后跳转到了kernel。
+
+
 ### (2)(spoc) 理解用户进程的生命周期。
 
 > 需写练习报告和简单编码，完成后放到git server 对应的git repo中
@@ -69,3 +78,13 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 能够把个人思考题和上述知识点中的内容展示出来：即在ucore运行过程中通过`cprintf`函数来完整地展现出来进程A相关的动态执行和内部数据/状态变化的细节。(约全面细致约好)
 
 请完成如下练习，完成代码填写，并形成spoc练习报告
+
+
+代码见[lab5-spoc-discuss](https://github.com/OneSida/ucore_lab/tree/master/related_info/lab5/lab5-spoc-discuss)
+
+1. 用户进程的启动、运行、就绪、等待、退出等在相应的do_XXX函数内可以看到
+2. 用户进程的管理与简单调度可以在sched.c的schedule函数内看到
+3. 用户进程的上下文切换过程在proc_run和switch_to内
+4. 用户进程的特权级切换过程为调用SYS_exec系统调用，然后在load_icode内设置trap_frame完成
+5. 用户进程的创建过程并完成资源占用为现在内核线程中调用fork函数完成创建与资源分配占用，然后调用SYS_exec系统调用完成切换
+6. 用户进程的退出过程并完成资源回收为调用SYS_exit后在do_exit内完成。

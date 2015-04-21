@@ -47,15 +47,14 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 > 注意，grub_kernel的源码在ucore_lab的lab1_X的git branch上，位于 `ucore_lab/labcodes_answer/lab1_result`
 
 (报告可课后完成)请理解grub multiboot spec的含义，并分析ucore_lab是如何实现符合grub multiboot spec的，并形成spoc练习报告。
-
-
+```
 grub（GRand Unified Bootloader）是一个多操作系统启动程序。
 grub是多启动规范的实现，它允许用户可以在计算机内同时拥有多个操作系统，并在计算机启动时选择希望运行的操作系统。
 grub可用于选择操作系统分区上的不同内核，也可用于向这些内核传递启动参数。
 Multiboot Specification 是一个描述bootloader如何加载x86的操作系统内核的开放性规范。
 ucore把原先的bootloader去掉，添加了一段用于配合multiboot的启动代码。
 这段代码主要是开启了保护模式，清理了页表，关闭了SSE指令集，保存了来自grub的启动参数，然后跳转到了kernel。
-
+```
 
 ### (2)(spoc) 理解用户进程的生命周期。
 
@@ -76,8 +75,6 @@ ucore把原先的bootloader去掉，添加了一段用于配合multiboot的启�
 
 阅读代码，在现有基础上再增加一个用户进程A，并通过增加cprintf函数到ucore代码中，
 能够把个人思考题和上述知识点中的内容展示出来：即在ucore运行过程中通过`cprintf`函数来完整地展现出来进程A相关的动态执行和内部数据/状态变化的细节。(约全面细致约好)
-
-请完成如下练习，完成代码填写，并形成spoc练习报告
 
 
 代码见[lab5-spoc-discuss](https://github.com/OneSida/ucore_lab/tree/master/related_info/lab5/lab5-spoc-discuss)

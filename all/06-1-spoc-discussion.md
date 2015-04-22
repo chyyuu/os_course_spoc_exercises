@@ -52,6 +52,8 @@
 
 (1)(spoc) 理解并完善调度算法
 
+代码见本目录下scheduler.py 实体课上小组：计25 矣晓沅 袁泰凌
+
 实现３种调度算法（SJF，FIFO，RR），可基于python, ruby, C, C++，LISP等）模拟实现，并给出测试。请参考[scheduler-homework.py](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab6/scheduler-homework.py)代码或独自实现。
 最后统计采用不同调度算法的每个任务的相关时间和总体的平均时间：
 　- turnaround time　周转时间

@@ -29,6 +29,7 @@
     * [lab4 SPOC讨论](all/05-3-lab4-spoc-discussion.md)
     * [lab5 SPOC讨论](all/05-4-lab5-spoc-discussion.md)    
 * [CPU调度](all/8-sched.md)
+    * [lec10 SPOC讨论](all/06-1-spoc-discussion.md)
 * [同步](all/9-sync.md)
 * [信号量](all/10-sem.md)
 * [死锁和进程间通信](all/11-deadlock.md)

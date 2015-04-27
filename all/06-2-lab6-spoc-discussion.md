@@ -50,7 +50,7 @@ trap(trap.c中)，用户态进程被打断，如果前进程控制块的成员�
 
 在各个调度点利用printf函数打印相关的信息，执行make run-priority，可以看到多个线程的调度过程。打印出的信息如下：
 
-可以看到，首先是在cpu_idle里，initproc马上要被调度，之后进入stride_pick_next()进行选择，可以看到，被选择的是initproc，因为之后进入了initmain。然后在init_main里，调用了do_wait，initproc进入等待状态，随后调用proc2.之后就可以看到，用户进程里fork的各个子线程依次被调用然后退出。
+可以看到，首先是在cpu_idle里，initproc马上要被调度，之后进入stride_pick_next()进行选择，可以看到，被选择的是initproc，因为之后进入了initmain。然后在init_main里，调用了do_wait，initproc进入等待状态，随后调用proc2.之后就可以看到，用户进程里fork的各个子线程依次被调用然后退出。具体代码详见本目录下的lab6-spoc-discuss。
 
     Now it's in cpu_idle, current id 0 needs to be scheduled
      It's in stride_pick_next(), proc id 1 is selected! The stride of 1 is 2147483647 

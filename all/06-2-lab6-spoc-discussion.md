@@ -41,4 +41,40 @@
 
 ### 练习用的[lab6 spoc exercise project source code](https://github.com/chyyuu/ucore_lab/tree/master/labcodes_answer/lab6_result)
 
+```
+从相应调度点打印输出。主要的调度点如下：
+do_exit
+do_wait
+init_main
+cpu_idle
+lock
+trap
 
+---------------------- Scehdule at cpu_idle proc 0 --------------------------
+---------------------- Schedule at do_wait proc 1 --------------------------
+kernel_execve: pid = 2, name = "exit".
+I am the parent. Forking the child...
+I am parent, fork a child pid 3
+I am the parent, waiting now..
+---------------------- Schedule at do_wait proc 1 --------------------------
+I am the child.
+---------------------- Schedule at trap before proc 3--------------------------
+---------------------- Schedule at trap after proc 3--------------------------
+---------------------- Schedule at trap before proc 3--------------------------
+---------------------- Schedule at trap after proc 3--------------------------
+---------------------- Schedule at trap before proc 3--------------------------
+---------------------- Schedule at trap after proc 3--------------------------
+---------------------- Schedule at trap before proc 3--------------------------
+---------------------- Schedule at trap after proc 3--------------------------
+---------------------- Schedule at trap before proc 3--------------------------
+---------------------- Schedule at trap after proc 3--------------------------
+---------------------- Schedule at trap before proc 3--------------------------
+---------------------- Schedule at trap after proc 3--------------------------
+---------------------- Schedule at trap before proc 3--------------------------
+---------------------- Schedule at trap after proc 3--------------------------
+---------------------- Schedule at do_exit proc 3--------------------------
+waitpid 3 ok.
+exit pass.
+---------------------- Schedule at do_exit proc 2--------------------------
+---------------------- Schedule at init_main --------------------------
+```

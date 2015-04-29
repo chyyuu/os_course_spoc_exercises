@@ -39,6 +39,7 @@
     * [lab6 SPOC讨论](all/06-2-lab6-spoc-discussion.md)     
 * [同步](all/9-sync.md)
     * [lec17 在线练习](all/07-1-quiz.md)
+    * [lec17 SPOC讨论](all/07-1-spoc-discussion.md)    
 * [信号量](all/10-sem.md)
     * [lec18 在线练习](all/08-1-quiz.md)
 * [死锁和进程间通信](all/11-deadlock.md)

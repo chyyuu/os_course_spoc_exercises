@@ -54,18 +54,21 @@ tf和context中的esp
 
 > 注意 state、pid、cr3，context，trapframe的含义
 
+为进程分配proc_struct结构，填写上述的state进程状态，pid进程号，cr3页表寄存器，context进程上下文，tf中断帧。然后在do_fork中分配pid，最后对其进行调度。
+
 ### 练习2：分析并描述新创建的内核线程是如何分配资源的
 
 > 注意 理解对kstack, trapframe, context等的初始化
 
+新创建的内核线程，分别进行了kstack trapframe context的资源分配kstack的初始化setup_kstack函数 调用alloc_page分配页面，然后调用page2kva得到页对应的内核虚拟地址，即为堆栈起始地址trapframe的初始化copy_thread函数 为trapframe分配地址空间，由这一句"proc->tf = (struct trapframe * )(proc->kstack+KSTACKSIZE)-1)"可知其终止地址为kstack的栈顶，利用传入的参数tf对其进行初始，然后对寄存器进行相应设置context的初始化copy_thread函数 为context的eip esp赋初值然后便完成了资源的分配。
 
 当前进程中唯一，操作系统的整个生命周期不唯一，在get_pid中会循环使用pid，耗尽会等待
 
 ### 练习3：阅读代码，在现有基础上再增加一个内核线程，并通过增加cprintf函数到ucore代码中
-能够把进程的生命周期和调度动态执行过程完整地展现出来
+能够把内核线程的生命周期和调度动态执行过程完整地展现出来
+
+代码见ucore_lab仓库中的对应位置（即练习用project）。
 
 ### 练习4 （非必须，有空就做）：增加可以睡眠的内核线程，睡眠的条件和唤醒的条件可自行设计，并给出测试用例，并在spoc练习报告中给出设计实现说明
 
 ### 扩展练习1: 进一步裁剪本练习中的代码，比如去掉页表的管理，只保留段机制，中断，内核线程切换，print功能。看看代码规模会小到什么程度。
-
-

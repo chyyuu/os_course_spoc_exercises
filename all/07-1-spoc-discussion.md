@@ -87,10 +87,10 @@ loop.s的汇编代码如下：
 
     dx          Thread 0         
     0   
-   -1   1000 sub  $1,%dx
-   -1   1001 test $0,%dx
-   -1   1002 jgte .top
-   -1   1003 halt
+     -1   1000 sub  $1,%dx
+      -1   1001 test $0,%dx
+      -1   1002 jgte .top
+      -1   1003 halt
    
 由此可知，%dx寄存器的初值默认为0
 

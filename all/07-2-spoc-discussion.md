@@ -62,7 +62,7 @@ s.count--;              //有可用资源，占用该资源；
 
 具体的实现上，和wiki上的学长有些区别。wiki上的学长是用了一个所以再设置一个排队信号量queue，每次读写进程要求访问文件都要在此信号量上排队，根据先来先得公平竟争。我的思路总体来说属于同一类，但是略有区别。我的思路如下：
 
-    设置一个读者增加信号量AddReadSemaphore，AddReadSemaphore为一个二值信号量。每个写者要写时，先申请AddReadSemaphore，写完后释放AddReadSemaphore。每个读者要读时，首先申请AddReadSemaphore。若申请失败，说明此时有写者准备要写了，不允许增加新的读者。只有等当前读者读完，等待的写者写完，新的读者才能获取AddReadSemaphore并开始写。若AddReadSemaphore申请成功，表示现在没有写者在等待写。由于AddReadSemaphore是二值信号量，所以不能等读完才释放，否则没办法同时多个读者读，所以读者应该在AddReadSemaphore申请成功，读者计数ReaderCount 加1成功后即释放，以便其他读者开始写。
+设置一个读者增加信号量AddReadSemaphore，AddReadSemaphore为一个二值信号量。每个写者要写时，先申请AddReadSemaphore，写完后释放AddReadSemaphore。每个读者要读时，首先申请AddReadSemaphore。若申请失败，说明此时有写者准备要写了，不允许增加新的读者。只有等当前读者读完，等待的写者写完，新的读者才能获取AddReadSemaphore并开始写。若AddReadSemaphore申请成功，表示现在没有写者在等待写。由于AddReadSemaphore是二值信号量，所以不能等读完才释放，否则没办法同时多个读者读，所以读者应该在AddReadSemaphore申请成功，读者计数ReaderCount 加1成功后即释放，以便其他读者开始写。
 
 具体来说，设计如下四个信号：
 

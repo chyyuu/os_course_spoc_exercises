@@ -51,3 +51,131 @@ s.count--;              //有可用资源，占用该资源；
 ## 小组思考题
 
 1. （spoc） 每人用python threading机制用信号量和条件变量两种手段分别实现[47个同步问题](07-2-spoc-pv-problems.md)中的一题。向勇老师的班级从前往后，陈渝老师的班级从后往前。请先理解[]python threading 机制的介绍和实例](https://github.com/chyyuu/ucore_lab/tree/master/related_info/lab7/semaphore_condition)
+
+```
+35:
+
+信号量
+
+import threading
+import random
+import time
+
+critical = threading.Semaphore(1)
+critical_product = -1
+
+class Consumer(threading.Thread):
+    def __init__(self, number):
+        self.number = number
+        self.ingredient = [1, 1, 1]
+        self.ingredient[number] = 0
+        threading.Thread.__init__(self)
+
+    def run(self):
+        #print "I am %s %d" % (self.name,self.number)
+        # random sleep
+        time.sleep(2)
+        global critical
+        global critical_product
+        while True:
+            critical.acquire()
+            print "I am %s in critical!" % (self.name)
+            if critical_product == self.number:
+                print "My require ingredient is %d and I get %d now!" % (self.number, critical_product)
+                critical_product = -1
+                critical.release()
+                break
+            critical.release()
+            time.sleep(random.randrange(1, 5))
+        print "I am %s, I'm finished." % (self.name)
+
+class Producer(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        global critical
+        global critical_product
+        count = 0
+        while (count < 3):
+            critical.acquire()
+            print "I am %s in critical!" % (self.name)
+            if critical_product == -1:
+                critical_product = count
+                count += 1
+            critical.release()
+            time.sleep(random.randrange(1, 5))
+
+
+if __name__ == '__main__':
+    my = Producer()
+    my.start()
+
+    for i in range(0, 3):
+        my = Consumer(i)
+        my.start()
+        time.sleep(1)
+
+
+条件变量
+
+import threading
+import random
+import time
+
+condition = threading.Condition()
+product = -1
+
+class Consumer(threading.Thread):
+    def __init__(self, number):
+        self.number = number
+        #self.ingredient = [1, 1, 1]
+        #self.ingredient[number] = 0
+        threading.Thread.__init__(self)
+
+    def run(self):
+        #print "I am %s %d" % (self.name,self.number)
+        # random sleep
+        while True:
+            global condition
+            global product
+            if condition.acquire():
+                if product == self.number:
+                    print "My require ingredient is %d and I get %d now!" % (self.number, product)
+                    product = -1
+                    condition.notify()
+                    condition.release()
+                    break
+                else:
+                    condition.wait()
+                condition.release()
+
+        print "I am %s, I'm finished." % (self.name)
+
+class Producer(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        global condition
+        global product
+        count = 0
+        while (count < 3):
+            if condition.acquire():
+                if product == -1:
+                    product = count
+                    print "I an producing ingredient %d now!" % (product)
+                    count += 1
+                    condition.notify()
+                else:
+                    condition.wait()
+                condition.release()
+
+
+if __name__ == '__main__':
+    my = Producer()
+    my.start()
+
+    for i in range(0, 3):
+        my = Consumer(i)
+        my.start()
+        time.sleep(1)
+```

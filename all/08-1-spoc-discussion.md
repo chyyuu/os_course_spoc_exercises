@@ -129,12 +129,33 @@
     Total: [28, 28, 1, 2]	Available: [28, 28, 1, 2]
     
     SUCCESS proc lists  [0, 1, 2]
-    
-
-
- 
-
  - (spoc) 以小组为单位，请思考在lab1~lab5的基础上，是否能够实现IPC机制，请写出如何实现信号，管道或共享内存（三选一）的设计方案。
+ 
+共享内存
+
+在pmm.c中增加支持共享内存的几个函数
+
+    uint32_t getShid();
+    获取共享块的id，由此函数分配id，以确保对同一共享块，不同进程拿到的相同，以确保共享块id的全局唯一
+    
+    bool cancleShid(uint32_t shm_id);
+    当某一共享段没有被任何进程的地址空间映射(没有被使用)时，应调用此函数，回收id.具体判断是否还有进程在使用共享段在此函数中调用。
+
+    uint32_t shmget(size_t size, bool flags);
+    创建一个共享块，调用alloc_page申请size大小的page，然后调用getShid获得该共享空间的唯一表示并返回。此处应创建一个全局结构，用于维护共享空间id shm_id到对应物理页的映射。
+    
+    void shmat(uint32_t shmid, bool flags)；
+    把共享段映射到该进程的地址空间，完成页表项的建立，设置共享标志为等工作
+    
+    void shmdt(uint32_t shm_id);
+    取消共享段到进程笛子空间的映射。完页表项的修改，将相应标志位置为0.最后需要调用cancleShid完成id回收。
+    
+    void shmctl(uint32_t shm_id);
+    控制函数，用于共享段的空间回收等工作。
+
+协调共享内存的访问冲突可以用信号量来解决。
+ 
+ 
  
  - (spoc) 扩展：用C语言实现某daemon程序，可检测某网络服务失效或崩溃，并用信号量机制通知重启网络服务。[信号机制的例子](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab7/ipc/signal-ex1.c)
 

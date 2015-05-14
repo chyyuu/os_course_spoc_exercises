@@ -59,6 +59,26 @@
 ## 小组思考题
  1. (spoc)完成Simple File System的功能，支持应用程序的一般文件操作。具体帮助和要求信息请看[sfs-homework](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab8/sfs-homework.md)
 
+> 问题1： 
+```
+mkdir("/g")
+creat("/q")
+creat("/u")
+link("/u","/x")
+mkdir("/t")
+creat("/g/c")
+unlink("/x")
+mkdir("/g/w")
+fd=open("/g/c", O_WRONLY|O_APPEND); write(fd, buf, BLOCKSIZE); close(fd)
+fd=open("/g/c", O_WRONLY|O_APPEND); write(fd, buf, BLOCKSIZE); close(fd);
+```
+
+> 问题2：
+见[sfs-homework.py](https://github.com/OneSida/ucore_lab/blob/master/related_info/lab8/sfs-homework.py)
+
+> 问题3：
+见[sfs-homework-softlink.py](https://github.com/OneSida/ucore_lab/blob/master/related_info/lab8/sfs-homework-softlink.py)
+
 
  1. (spoc)FAT、UFS、YAFFS、NTFS这几种文件系统中选一种，分析它的文件卷结构、目录结构、文件分配方式，以及它的变种。
   wikipedia上的文件系统列表参考
@@ -72,3 +92,37 @@
   - [https://piazza.com/class/i5j09fnsl7k5x0?cid=418 UFS文件系统分析]
   - [https://piazza.com/class/i5j09fnsl7k5x0?cid=419 ZFS文件系统分析]
   - [https://piazza.com/class/i5j09fnsl7k5x0?cid=420 YAFFS文件系统分析]
+
+```
+FAT32
+
+1.文件卷结构
+AT32文件系统由DBR及其保留扇区，FAT1，FAT2和DATA四个部分组成
+这些结构是在分区被格式化时创建出来的，含义解释如下：
+DBR及其保留扇区：DBR的含义是DOS引导记录，也称为操作系统引导记录，在DBR之后往往会有一些保留扇区。
+FAT1：FAT的含义是文件分配表，FAT32一般有两份FAT，FAT1是第一份，也是主FAT。
+FAT2：FAT2是FAT32的第二份文件分配表，也是FAT1的备份。
+DATA：DATA也就是数据区，是FAT32文件系统的主要区域，其中包含目录区域。
+
+2.目录项
+1) 0-- 7字节 文件正名。 
+(2) 8--10字节 文件扩展名。 
+(3) 11字节 文件属性，按二进制位定义，最高两位保留未用，0至5位分别是只读位、隐藏位、系统位、卷标位、子目录位、归档位。 
+(4) 11--13字节 仅长文件名目录项用，用来存储其对应的短文件名目录项的文件名字节校验和等。 
+(5) 13--15字节 24位二进制的文件建立时间，其中的高5位为小时，次6位为分钟。 
+(6) 16--17字节 16位二进制的文件建立日期，其中的高7位为相对于1980年的年份值，次4位为月份，后5位为月内日期。 
+(7) 18--19字节 16位二进制的文件最新访问日期，定义同(6)。 
+(8) 20--21字节 起始簇号的高16位。 
+(9) 22--23字节 16位二进制的文件最新修改时间，其中的高5位为小时，次6位为分钟，后5位的二倍为秒数。 
+(10)24--25字节 16位二进制的文件最新修改日期，定义同(6)。 
+(11)26--27字节 起始簇号的低16位。 
+(12)28--31字节 32位的文件字节长度
+
+3.文件分配方式
+一个分区分成同等大小的簇，也就是连续空间的小块。簇的大小随着FAT文件系统的类型以及分区大小而不同，
+典型的簇大小介于2KB到32KB之间。每个文件根据它的大小可能占有一个或者多个簇；
+这样，一个文件就由这些这些（称为单链表）簇链所表示。
+
+4.变种
+FAT12    FAT16    FAT32
+```

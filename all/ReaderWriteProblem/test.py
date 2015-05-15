@@ -12,7 +12,7 @@ ReaderCount = 0;
 class Reader(threading.Thread):  
     """class using semaphore"""  
 
-    def __init__(self,threadName,CountSem,WriteSem,ReadSem,AddRead):  
+    def __init__(self,threadName,CountSem,WriteSem,ReadSem,AddRead,SleepTime):  
 
       """initialize thread"""  
 
@@ -27,16 +27,19 @@ class Reader(threading.Thread):
       self.WriteSemaphore = WriteSem
       self.ReadSemaphore = ReadSem
       self.AddReadSemaphore = AddRead
+      self.sleepTime = SleepTime
 
     def run(self):
       #acquire write mutex
       global ReaderCount
+      print " Thread %s  enters function run() and is waiting for  AddReadSemaphore!" % (self.getName()) 
       self.AddReadSemaphore.acquire()
-      print " Thread %s  is waiting for  reading!" % (self.getName()) 
+      print " Thread %s  is waiting for  ReadSemaphore!" % (self.getName()) 
       self.ReadSemaphore.acquire()
-      
+
       self.CountSemaphore.acquire() 
       if ReaderCount == 0:
+        print " Thread %s  is waiting for  WriteSemaphore!" % (self.getName()) 
         self.WriteSemaphore.acquire()
       
       ReaderCount = ReaderCount + 1
@@ -47,10 +50,8 @@ class Reader(threading.Thread):
 
 
       print " Thread %s  is reading! ReaderCount is %d now" % (self.getName(),ReaderCount)
-      for i in range(1,1000):
-        for j in range(1,1000):
-          (i+j) % 23
-      print " Thread %s  's reading finish! ReaderCount is %d now" % (self.getName(),ReaderCount)
+      time.sleep(self.sleepTime)
+      print " Thread %s  's reading finish!" % (self.getName())
 
       self.CountSemaphore.acquire()
       ReaderCount = ReaderCount - 1
@@ -71,13 +72,15 @@ if __name__ == "__main__":
     threadReadSem = threading.Semaphore(2)
     threadAddReadSem = threading.Semaphore(1)
 
-    threads.append(Writer("thread"+str(0),threadCountSem,threadWriteSem,threadAddReadSem))
-    threads.append(Reader("thread"+str(1),threadCountSem,threadWriteSem,threadReadSem,threadAddReadSem))
-    threads.append(Reader("thread"+str(2),threadCountSem,threadWriteSem,threadReadSem,threadAddReadSem))
-    threads.append(Reader("thread"+str(3),threadCountSem,threadWriteSem,threadReadSem,threadAddReadSem))
+    #threads.append(Writer("thread"+str(0),threadCountSem,threadWriteSem,threadAddReadSem,5))
+    #threads.append(Writer("thread"+str(1),threadCountSem,threadWriteSem,threadAddReadSem,5))
+    threads.append( Reader("thread"+str(1), threadCountSem, threadWriteSem, threadReadSem, threadAddReadSem, 5) )
+    threads.append(Writer("thread"+str(2),threadCountSem,threadWriteSem,threadAddReadSem,3))
+    threads.append(Reader("thread"+str(3),threadCountSem,threadWriteSem,threadReadSem,threadAddReadSem,3 ))
+    #threads.append(Reader("thread"+str(3),threadCountSem,threadWriteSem,threadReadSem,threadAddReadSem,3))
 
-    threads.append(Writer("thread"+str(4),threadCountSem,threadWriteSem,threadAddReadSem))
-    threads.append(Reader("thread"+str(5),threadCountSem,threadWriteSem,threadReadSem,threadAddReadSem))
+    #threads.append(Writer("thread"+str(4),threadCountSem,threadWriteSem,threadAddReadSem))
+    #threads.append(Reader("thread"+str(5),threadCountSem,threadWriteSem,threadReadSem,threadAddReadSem))
 
     #for i in range(1,10): 
       #threads.append(Reader("thread"+str(i),threadCountSem,threadWriteSem,threadReadSem,threadAddReadSem))

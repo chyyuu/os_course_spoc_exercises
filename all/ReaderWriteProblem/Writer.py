@@ -6,7 +6,7 @@ import time
 class Writer(threading.Thread):  
     """class using semaphore"""  
 
-    def __init__(self,threadName,CountSem,WriteSem,AddRead):  
+    def __init__(self,threadName,CountSem,WriteSem,AddRead, SleepTime):  
        
        """initialize thread"""  
 
@@ -18,6 +18,7 @@ class Writer(threading.Thread):
        self.CountSemaphore = CountSem
        self.WriteSemaphore = WriteSem
        self.AddReadSemaphore = AddRead
+       self.sleepTime = SleepTime
 
 
    
@@ -29,9 +30,7 @@ class Writer(threading.Thread):
        print " Thread %s  is waiting for writing!" % (self.getName()) 
        self.WriteSemaphore.acquire() 
        print " Thread %s  is writing!" % (self.getName()) 
-       for i in range(1,1000):
-        for j in range(1,1000):
-          (i+j) % 23
+       time.sleep(self.sleepTime)
        print " Thread %s  's writing finish!" % (self.getName()) 
        
        #release the  write mutex  

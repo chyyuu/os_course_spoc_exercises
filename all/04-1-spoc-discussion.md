@@ -148,7 +148,75 @@ Virtual Address 1e6f(0 001_11 10_011 0_1111):
            0d 15 0a 1a 0c 12 1e 11 0e 02 1d 10 15 14 07 13
       --> To Disk Sector Address 0x2cf(0001011001111) --> Value: 1c
 ```
-
+答：
+```
+#include<iostream>
+#include<stdio.h>
+#include<bitset>
+using namespace std;
+unsigned int mypdbr[32];
+int main()
+{
+	mypdbr[0]=0xe1;
+	mypdbr[1]=0xb5;
+	mypdbr[2]=0xa1;
+	mypdbr[3]=0xc1;
+	mypdbr[4]=0xb3;
+	mypdbr[5]=0xe4;
+	mypdbr[6]=0xa6;
+	mypdbr[7]=0xbd;
+	for(int i=8; i<32; i++)
+		mypdbr[i]=0x7f;	
+	unsigned int pde_index, pde_context, pfn, pte_index, pte_contents;
+	unsigned int offset;
+	unsigned int value;	
+	unsigned int va;// = 0x0330;	
+	scanf("%08x",&va);	
+	pde_index = (va&0x07c00) >> 10;
+	pte_index = (va&0x03e0) >> 5;
+	offset = (va&0x01f);	
+	pde_context = mypdbr[pde_index];
+	pfn = pde_context&0x07f;
+	value = (mypdbr[pde_index]&0x080) >> 7;	
+	printf("pde_index:0x%08x\npde_context:0x%08x\npfn:0x%08x\n",pde_index,pde_context,pfn);
+	cout << "value:" << value << endl;	
+	printf("\npte_index:0x%08x\noffset:0x%08x\n\n",pte_index,offset);	
+	scanf("%08x",&pte_contents);
+	//pte_contents = 0xe3;
+	unsigned int value2 = (pte_contents&0x080)>>7;
+	unsigned int pfn2 = pte_contents&0x7f;
+	unsigned int pa = (pfn2<<5)+offset;	
+	printf("pte_contents:0x%08x\nvalue2:%d\npfn2:0x%08x\npa:0x%08x\n",pte_contents,value2,pfn2,pa);
+	return 0;
+}
+```
+结果如下：
+```
+1. Virtual Address 6653:
+	--> pde index:0x19  pde contents:(0x7f, valid 0) 
+		-->Fault 
+2. Virtual Address 1c13:
+	--> pde index:0x7  pde contents:(0xbd, valid 1, pfn 0x3d)
+		--> pte index:0x0  pte contents:(0xf6, valid 1, pfn 0x76)
+			--> To Physical Address 0xed3 --> Value: 12		
+3. Virtual Address 6890:
+	--> pde index:0x1a  pde contents:(0x7f, valid 0) 
+		-->Fault  
+4. Virtual Address 0af6:
+	--> pde index:0x2  pde contents:(0xa1, valid 1, pfn 0x21)
+		--> pte index:0x17  pte contents:(0x7f, valid 0, pfn 0x7f)
+			--> To Disk Sector Address 0xff6 --> Value: 03	  
+5. Virtual Address 1e6f(0 001_11 10_011 0_1111):
+  --> pde index:0x7(00111)  pde contents:(0xbd, 10111101, valid 1, pfn 0x3d)
+  page 6c: e1 b5 a1 c1 b3 e4 a6 bd 7f 7f 7f 7f 7f 7f 7f 7f
+           7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f
+  page 3d: f6 7f 5d 4d 7f 04 29 7f 1e 7f ef 51 0c 1c 7f 7f
+           7f 76 d1 16 7f 17 ab 55 9a 65 ba 7f 7f 0b 7f 7f 
+    --> pte index:0x13  pte contents:(0x16, valid 0, pfn 0x16)
+  disk 16: 00 0a 15 1a 03 00 09 13 1c 0a 18 03 13 07 17 1c 
+           0d 15 0a 1a 0c 12 1e 11 0e 02 1d 10 15 14 07 13
+      --> To Disk Sector Address 0x2cf(0001011001111) --> Value: 1c
+```
 ## 扩展思考题
 ---
 (1)请分析原理课的缺页异常的处理流程与lab3中的缺页异常的处理流程（分析粒度到函数级别）的异同之处。

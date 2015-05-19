@@ -7,14 +7,18 @@
 ### 总体介绍
 
 (1) ucore的线程控制块数据结构是什么？
+> struct proc_struct
 
 ### 关键数据结构
 
 (2) 如何知道ucore的两个线程同在一个进程？
+> parent、CR3
 
 (3) context和trapframe分别在什么时候用到？
+> 进程切换、中断
 
 (4) 用户态或内核态下的中断处理有什么区别？在trapframe中有什么体现？
+> 特权级、堆栈的转换。ss、esp
 
 ### 执行流程
 
@@ -31,6 +35,17 @@ tf和context中的esp
 ```
 
 (7)fork()父子进程的返回值是不同的。这在源代码中的体现中哪？
+```
+父进程返回值在do_fork(uint32_t clone_flags, uintptr_t stack, struct trapframe *tf) 函数中
+    ret = proc->pid;
+fork_out:
+    return ret;
+    所以父进程返回proc->pid为子进程id
+ 
+子进程copy_thread(struct proc_struct *proc, uintptr_t esp, struct trapframe *tf)函数中
+    proc->tf->tf_regs.reg_eax = 0;
+    返回值在eax寄存器中保存
+```
 
 (8)内核线程initproc的第一次执行流程是什么样的？能跟踪出来吗？
 
@@ -38,7 +53,8 @@ tf和context中的esp
 
 (1)(spoc) 理解内核线程的生命周期。
 
-> 需写练习报告和简单编码，完成后放到git server 对应的git repo中
+> 需写练习报告和简单编码，完成后放到git server 对应的git repo中   
+
 
 ### 掌握知识点
 1. 内核线程的启动、运行、就绪、等待、退出
@@ -52,20 +68,37 @@ tf和context中的esp
 
 ### 1. 分析并描述创建分配进程的过程
 
-> 注意 state、pid、cr3，context，trapframe的含义
+> 注意 state、pid、cr3，context，trapframe的含义   
+解答：
+```
+1. 记录进程的结构是proc_struct，首先创建sizeof(proc_struct)大小的地址空间为新的proc_struct
+2. 分配进程初始化会把所有的proc_struct结构中的内容全部设置为0
+3. 标记proc_state状态为PROC_UNINIT，表示未初始化分配
+4. 标记pid表示为-1
+5. 标记cr3为boot_cr3
+6. 最后返回这个Proc_struct结构的指针
+```
 
 ### 练习2：分析并描述新创建的内核线程是如何分配资源的
 
-> 注意 理解对kstack, trapframe, context等的初始化
-
+> 注意 理解对kstack, trapframe, context等的初始化   
+解答：
+```
+1. 创建进程结构并初始化各个域属性。
+2. 分配KSTACKPAGE 大小的页作为进程核心的堆栈
+3. 建立tf以及context作为copy部分
+4. 把proc_struct插入到proc_list中
+5. 唤醒新的子进程
+6. 增加全局的进程数量
+7. 设置返回值为新的子进程的pid
+```
 
 当前进程中唯一，操作系统的整个生命周期不唯一，在get_pid中会循环使用pid，耗尽会等待
 
 ### 练习3：阅读代码，在现有基础上再增加一个内核线程，并通过增加cprintf函数到ucore代码中
-能够把进程的生命周期和调度动态执行过程完整地展现出来
+能够把内核线程的生命周期和调度动态执行过程完整地展现出来   
+> 
 
 ### 练习4 （非必须，有空就做）：增加可以睡眠的内核线程，睡眠的条件和唤醒的条件可自行设计，并给出测试用例，并在spoc练习报告中给出设计实现说明
 
 ### 扩展练习1: 进一步裁剪本练习中的代码，比如去掉页表的管理，只保留段机制，中断，内核线程切换，print功能。看看代码规模会小到什么程度。
-
-

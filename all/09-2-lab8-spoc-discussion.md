@@ -105,4 +105,8 @@
 
 2. （spoc） 在下面的实验代码的基础上，实现基于文件系统的pipe IPC机制
 
+与其他组员一起完成了lax中的基于VFS的pipe机制，报告git https://github.com/swnhieian/ucore_lab/blob/master/labcodes/labx-pipe/labx-pipe.md
+
+代码git：https://github.com/swnhieian/ucore_lab/tree/master/labcodes/labx-pipe
+
 ### 练习用的[lab8 spoc exercise project source code](https://github.com/chyyuu/ucore_lab/tree/master/labcodes_answer/lab8_result)

@@ -50,6 +50,7 @@ s.count--;              //有可用资源，占用该资源；
  
 ## 小组思考题
 
+<<<<<<< HEAD
 1. （spoc） 每人用python threading机制用信号量和条件变量两种手段分别实现[47个同步问题](07-2-spoc-pv-problems.md)中的一题。向勇老师的班级从前往后，陈渝老师的班级从后往前。请先理解[]python threading 机制的介绍和实例](https://github.com/chyyuu/ucore_lab/tree/master/related_info/lab7/semaphore_condition)
 
 具体代码见本目录下的ReaderWriteProblem文件夹里的python代码
@@ -133,3 +134,8 @@ ReaderCount为当前正在读的线程计数
     
 对上述结果做简要说明：线程0，4是写者，其余是读者， “is waiting for writing!”是在申请threadAddReadSem成功后打印的， “is waiting for  reading”是在threadAddReadSem申请成功后打印的。从上述结果可看出，线程0写完，线程1开始写，进入临界区；线程二开始写，进入临界区；线程三申请threadAddReadSem成功，但是最大同时读线程为2，threadReadSem申请失败。等到1读完，3才进入临界区。此时4要写，申请threadAddReadSem成功，进入等待状态。5应该要开始写，但是4进入等待写，5申请threadAddReadSem失败，所以此时没有打印5的信息。而是看到，2和3都读完后，4进入写临界区。等4写完，5才开始读。
     
+=======
+1. （spoc） 每人用python threading机制用信号量和条件变量两种手段分别实现[47个同步互斥问题](07-2-spoc-pv-problems.md)中的一题。向勇老师的班级从前往后，陈渝老师的班级从后往前。请先理解[]python threading 机制的介绍和实例](https://github.com/chyyuu/ucore_lab/tree/master/related_info/lab7/semaphore_condition)
+
+2. (spoc)设计某个方法，能够动态检查出对于两个或多个进程的同步互斥问题执行中，没有互斥问题，能够同步等，以说明实现的正确性。
+>>>>>>> c42e67792e804a57bfcbf5f509328e840eb70c29

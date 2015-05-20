@@ -41,6 +41,7 @@
  - (spoc)完成磁盘访问与磁盘寻道算法的作业，具体帮助和要求信息请看[disksim指导信息](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab8/disksim-homework.md)和[disksim参考代码](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab8/disksim-homework.py)
 答：
 ```
+原程序478行有问题，已改正。
 问题一FIFO:
 ./disksim.py  采用FIFO -a 0		5.5*30（旋转）+30（传输）=195
 ./disksim.py   -a 6				360-15（旋转）+30（传输）=345

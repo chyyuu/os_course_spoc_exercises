@@ -39,5 +39,58 @@
 
 ## 小组思考题
  - (spoc)完成磁盘访问与磁盘寻道算法的作业，具体帮助和要求信息请看[disksim指导信息](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab8/disksim-homework.md)和[disksim参考代码](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab8/disksim-homework.py)
+答：
+```
+问题一FIFO:
+./disksim.py  采用FIFO -a 0		5.5*30（旋转）+30（传输）=195
+./disksim.py   -a 6				360-15（旋转）+30（传输）=345
+./disksim.py   -a 30			80（寻道）+360-80-15(旋转)+30(传输)=375
+./disksim.py   -a 7,30,8		7：0+15+30=45
+								30：80+220+30=330
+								8：80+310+30=420
+								总时间=795
+./disksim.py   -a 10,11,12,13,24,1
+								Block:  10  Seek:  0  Rotate:105  Transfer: 30  Total: 135
+								Block:  11  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+								Block:  12  Seek: 40  Rotate:320  Transfer: 30  Total: 390
+								Block:  13  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+								Block:  24  Seek: 40  Rotate:260  Transfer: 30  Total: 330
+								Block:   1  Seek: 80  Rotate:280  Transfer: 30  Total: 390
 
+								TOTALS      Seek:160  Rotate:965  Transfer:180  Total:1305
+
+问题二SSTF：
+./disksim.py   -a 10,11,12,13，24,1
+							找最近的磁道。顺序：10,11,1,12,13,24
+								Block:  10  Seek:  0  Rotate:105  Transfer: 30  Total: 135
+								Block:  11  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+								Block:   1  Seek:  0  Rotate: 30  Transfer: 30  Total:  60
+								Block:  12  Seek: 40  Rotate:260  Transfer: 30  Total: 330
+								Block:  13  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+								Block:  24  Seek: 40  Rotate:260  Transfer: 30  Total: 330
+
+								TOTALS      Seek: 80  Rotate:655  Transfer:180  Total: 915
+								
+问题三 SCAN, C-SCAN
+（1）SCAN./disksim.py   -a 10,11,12,13,24,1
+						从磁头开始位置，先向左再向右扫一遍：
+							Block:  10  Seek:  0  Rotate:105  Transfer: 30  Total: 135
+							Block:  11  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+							Block:   1  Seek:  0  Rotate: 30  Transfer: 30  Total:  60
+							Block:  12  Seek: 40  Rotate:260  Transfer: 30  Total: 330
+							Block:  13  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+							Block:  24  Seek: 40  Rotate:260  Transfer: 30  Total: 330
+
+							TOTALS      Seek: 80  Rotate:655  Transfer:180  Total: 915
+（2）C-SCAN./disksim.py   -a 10,11,12,13,24,1
+						C—SCAN：从磁头位置开始，一直保持一个方向扫描。本例中同上
+							Block:  10  Seek:  0  Rotate:105  Transfer: 30  Total: 135
+							Block:  11  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+							Block:   1  Seek:  0  Rotate: 30  Transfer: 30  Total:  60
+							Block:  12  Seek: 40  Rotate:260  Transfer: 30  Total: 330
+							Block:  13  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+							Block:  24  Seek: 40  Rotate:260  Transfer: 30  Total: 330
+
+							TOTALS      Seek: 80  Rotate:655  Transfer:180  Total: 915
+```
 

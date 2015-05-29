@@ -38,7 +38,11 @@
 
 请完成如下练习，完成代码填写，并形成spoc练习报告
 > 需写练习报告和简单编码，完成后放到git server 对应的git repo中
-
+```
+尚未完成。
+设计思路应该是在每个schedule函数前都加一个printf函数，schedule函数的出现就代表这是一个调度点，所以在这之前输出信息
+就可以发现ucore相关调度点如何动态调度和执行的细节。
+```
 ### 练习用的[lab6 spoc exercise project source code](https://github.com/chyyuu/ucore_lab/tree/master/labcodes_answer/lab6_result)
 
 

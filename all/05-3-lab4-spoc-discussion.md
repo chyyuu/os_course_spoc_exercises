@@ -56,7 +56,8 @@ fork_out:
 > 需写练习报告和简单编码，完成后放到git server 对应的git repo中   
 答：
 ```
-尚未完成。
+代码与实验报告：
+https://github.com/MoXiGeTuFei/ucore_lab/tree/master/related_info/lab4/lab4-spoc-discuss
 ```
 
 ### 掌握知识点
@@ -103,7 +104,7 @@ fork_out:
 > 
 答：
 ```
-尚未完成。
+https://github.com/MoXiGeTuFei/ucore_lab/tree/master/related_info/lab4/lab4-spoc-discuss
 ```
 ### 练习4 （非必须，有空就做）：增加可以睡眠的内核线程，睡眠的条件和唤醒的条件可自行设计，并给出测试用例，并在spoc练习报告中给出设计实现说明
 

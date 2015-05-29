@@ -51,5 +51,9 @@ s.count--;              //有可用资源，占用该资源；
 ## 小组思考题
 
 1. （spoc） 每人用python threading机制用信号量和条件变量两种手段分别实现[47个同步互斥问题](07-2-spoc-pv-problems.md)中的一题。向勇老师的班级从前往后，陈渝老师的班级从后往前。请先理解[]python threading 机制的介绍和实例](https://github.com/chyyuu/ucore_lab/tree/master/related_info/lab7/semaphore_condition)
-
+```
+答：这次没有去上课。按照同学的题目自己写了一份:
+33:打印机问题
+ 代码：https://github.com/MoXiGeTuFei/ucore_lab/tree/master/related_info/lab7/semaphore_condition/spoc
+```
 2. (spoc)设计某个方法，能够动态检查出对于两个或多个进程的同步互斥问题执行中，没有互斥问题，能够同步等，以说明实现的正确性。

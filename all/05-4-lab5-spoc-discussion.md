@@ -46,7 +46,7 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 
 > 注意，grub_kernel的源码在ucore_lab的lab1_X的git branch上，位于 `ucore_lab/labcodes_answer/lab1_result`
 ```
-没搞出来。。
+U盘无法在虚拟机中找到，不明原因。
 ```
 
 (报告可课后完成)请理解grub multiboot spec的含义，并分析ucore_lab是如何实现符合grub multiboot spec的，并形成spoc练习报告。
@@ -74,5 +74,6 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 请完成如下练习，完成代码填写，并形成spoc练习报告
 答：
 ```
-
+代码与报告：
+https://github.com/MoXiGeTuFei/ucore_lab/tree/master/related_info/lab5/lab5-spoc-discuss
 ```

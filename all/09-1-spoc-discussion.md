@@ -59,6 +59,28 @@
 ## 小组思考题
  1. (spoc)完成Simple File System的功能，支持应用程序的一般文件操作。具体帮助和要求信息请看[sfs-homework](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab8/sfs-homework.md)
 
+实现createLink部分[piazza](https://piazza.com/class/i5j09fnsl7k5x0?cid=421)
+```python
+    def createLink(self, target, newfile, parent):
+    # YOUR CODE, YOUR ID
+        # find info about parent
+        pinode = self.inodes[self.nameToInum[parent]]
+	       pdata = pinode.getAddr()
+        # is there room in the parent directory?
+        if pdata.getFreeEntries() == 0 :
+            return -1
+        # if the newfile was already in parent dir?
+        if pdata.dirEntryExists(newfile) :
+            return -1
+        # now, find inumber of target
+        tinum = self.nameToInum[target]
+        # inc parent ref count
+        pinode.incRefCnt()
+        # now add to directory
+        pdata.addDirEntry(newfile, tinum)
+    # DONE
+        return tinum
+```
 
  1. (spoc)FAT、UFS、YAFFS、NTFS这几种文件系统中选一种，分析它的文件卷结构、目录结构、文件分配方式，以及它的变种。
   wikipedia上的文件系统列表参考

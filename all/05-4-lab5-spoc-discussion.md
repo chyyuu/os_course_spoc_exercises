@@ -46,6 +46,18 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 
 (报告可课后完成)请理解grub multiboot spec的含义，并分析ucore_lab是如何实现符合grub multiboot spec的，并形成spoc练习报告。
 
+> 首先删除 U 盘上的所有分区然后创建一个新的分区，然后将分区格式化为 FAT32 。
+
+> 将 U 盘挂载到 /media/MULTIBOOT 然后在 U 盘上安装 grub 。然后按照提示创建 grub.cfg 如下（README 里写的有点问题）。
+
+```
+menuentry 'ucore-lab1' {
+    knetbsd /boot/grub_kernel
+}
+```
+
+> 最后把编译好的内核拷贝到 ./boot 目录下就可以重启运行了。
+
 ### (2)(spoc) 理解用户程的生命周期。
 
 > 需写练习报告和简单编码，完成后放到git server 对应的git repo中

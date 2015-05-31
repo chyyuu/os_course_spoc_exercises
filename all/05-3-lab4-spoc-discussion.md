@@ -58,11 +58,33 @@ tf和context中的esp
 
 > 注意 理解对kstack, trapframe, context等的初始化
 
+```c
+//    1. call alloc_proc to allocate a proc_struct
+proc = alloc_proc();
+proc->pid = get_pid();
+//    2. call setup_kstack to allocate a kernel stack for child process
+setup_kstack(proc);
+//    3. call copy_thread to setup tf & context in proc_struct
+copy_thread(proc, stack, tf);
+//    4. insert proc_struct into  proc_list
+list_add_before(&proc_list, &proc->list_link);
+//    5. call wakup_proc to make the new child process RUNNABLE
+wakeup_proc(proc);
+//    7. set ret vaule using child proc's pid
+nr_process++;
+ret = proc->pid;
+//  8. set parent
+proc->parent=current;
+```
+
+kstack 用的是 setup_kstack ，其它两者用的是 copy_thread 。
 
 当前进程中唯一，操作系统的整个生命周期不唯一，在get_pid中会循环使用pid，耗尽会等待
 
 ### 练习3：阅读代码，在现有基础上再增加一个内核线程，并通过增加cprintf函数到ucore代码中
 能够把进程的生命周期和调度动态执行过程完整地展现出来
+
+[链接](https://github.com/Socyrus/ucore_lab/tree/master/related_info)
 
 ### 练习4 （非必须，有空就做）：增加可以睡眠的内核线程，睡眠的条件和唤醒的条件可自行设计，并给出测试用例，并在spoc练习报告中给出设计实现说明
 

@@ -65,7 +65,7 @@
     # YOUR CODE, YOUR ID
         # find info about parent
         pinode = self.inodes[self.nameToInum[parent]]
-	       pdata = pinode.getAddr()
+	pdata = pinode.getAddr()
         # is there room in the parent directory?
         if pdata.getFreeEntries() == 0 :
             return -1

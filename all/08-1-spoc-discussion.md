@@ -47,6 +47,60 @@
 
  - (spoc) 以小组为单位，请思考在lab1~lab5的基础上，是否能够实现IPC机制，请写出如何实现信号，管道或共享内存（三选一）的设计方案。
  
+ > 参考 Linux 实现共享内存的方式，这是 System V 风格的共享内存。首先有这样一个表示共享内存区域的结构体：
+
+```c
+/* Data structure describing a shared memory segment.  */
+struct shmid_ds
+  {
+    struct ipc_perm shm_perm;           /* operation permission struct */
+    size_t shm_segsz;                   /* size of segment in bytes */
+    __time_t shm_atime;                 /* time of last shmat() */
+#ifndef __x86_64__
+    unsigned long int __glibc_reserved1;
+#endif
+    __time_t shm_dtime;                 /* time of last shmdt() */
+#ifndef __x86_64__
+    unsigned long int __glibc_reserved2;
+#endif
+    __time_t shm_ctime;                 /* time of last change by shmctl() */
+#ifndef __x86_64__
+    unsigned long int __glibc_reserved3;
+#endif
+    __pid_t shm_cpid;                   /* pid of creator */
+    __pid_t shm_lpid;                   /* pid of last shmop */
+    shmatt_t shm_nattch;                /* number of current attaches */
+    __syscall_ulong_t __glibc_reserved4;
+    __syscall_ulong_t __glibc_reserved5;
+  };
+```
+
+> 然后在 sys/shm.h 中定义几个方法，功能如下：
+
+```c
+/* The following System V style IPC functions implement a shared memory
+   facility.  The definition is found in XPG4.2.  */
+
+/* Shared memory control operation.  */
+extern int shmctl (int __shmid, int __cmd, struct shmid_ds *__buf) __THROW;
+
+/* Get shared memory segment.  */
+extern int shmget (key_t __key, size_t __size, int __shmflg) __THROW;
+
+/* Attach shared memory segment.  */
+extern void *shmat (int __shmid, const void *__shmaddr, int __shmflg)
+     __THROW;
+
+/* Detach shared memory segment.  */
+extern int shmdt (const void *__shmaddr) __THROW;
+```
+
+> shmget 就是用一个 key 返回一个对应到共享内存段的标识符。
+ 
+> shmat 将标识符 attach 到调用进程的内存地址空间的一个地址上。
+ 
+> shmdt detach 一个当前进程的 shmaddr 指向的内存段。有一个引用计数，最后 detach 的 process 负责释放内存。
+ 
  - (spoc) 扩展：用C语言实现某daemon程序，可检测某网络服务失效或崩溃，并用信号量机制通知重启网络服务。[信号机制的例子](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab7/ipc/signal-ex1.c)
 
  - (spoc) 扩展：用C语言写测试用例，测试管道、消息队列和共享内存三种通信机制进行不同通信间隔和通信量情况下的通信带宽、通信延时、带宽抖动和延时抖动方面的性能差异。[管道的例子](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab7/ipc/pipe-ex2.c)

@@ -56,28 +56,43 @@ s'(t)的栈底元素被替换，而s(t)中仍然有这个元素存在的情况�
 根据归纳假设，这种情况不存在，不予考虑。
 综上所述，命题成立。则LRU不存在belady现象。
 ```
+<<<<<<< HEAD
 
+=======
+>>>>>>> 790bc39b948c60181c85f58654a11682d075cbe2
 
 (2)（spoc）根据你的`学号 mod 4`的结果值，确定选择四种替换算法（0：LRU置换算法，1:改进的clock 页置换算法，2：工作集页置换算法，3：缺页率置换算法）中的一种来设计一个应用程序（可基于python, ruby, C, C++，LISP等）模拟实现，并给出测试。请参考如python代码或独自实现。
  - [页置换算法实现的参考实例](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab3/page-replacement-policy.py)
 ```
+<<<<<<< HEAD
 学号 mod 4 = 1
+=======
+学号 mod 4 = 1，实现改进的clock页置换算法。程序如下：
+>>>>>>> 790bc39b948c60181c85f58654a11682d075cbe2
 
 #include <iostream>
 #include <vector>
 using namespace std;
 
 struct Page {
+<<<<<<< HEAD
 int used;
 int modified;
 int frame;
 Page(int u, int m, int f) : used(u), modified(m), frame(f) {}
+=======
+    int used;
+  	 int modified;
+   	int frame;
+   	Page(int u, int m, int f) : used(u), modified(m), frame(f) {}
+>>>>>>> 790bc39b948c60181c85f58654a11682d075cbe2
 };
 
 vector<Page> pages;
 int pointer;
 
 void print() {
+<<<<<<< HEAD
 int i = pointer;
 for (int j = 0; j < 4; j ++) {
 cout << pages[i].used << ' ' << pages[i].modified << ' ' << pages[i].frame << endl;
@@ -163,6 +178,94 @@ return 0;
 }    
 ```
 ```
+=======
+    int i = pointer;
+    for (int j = 0; j < 4; j ++) {
+    	   cout << pages[i].used << ' ' << pages[i].modified << ' ' << pages[i].frame << endl;
+     	  i = (i + 1) % 4;    
+   	}       
+}    
+
+void read(int f) {
+    bool flag = false;
+    for (int i = pages.size() - 1; i >= 0; i --)
+ 	   	  if (f == pages[i].frame) {
+ 	   	      flag = true;
+ 	   	 	    pages[i].used = 1;
+        	   cout << "read " << f << " hit" << endl;
+         	  break;   
+ 	   	  }  
+   	if (!flag) {
+   	 	  cout << "read " << f << " miss" << endl;
+	   	   while (pages[pointer].used || pages[pointer].modified) {
+  	   		    if (pages[pointer].used) {
+  			 	         pages[pointer].used = 0;
+  			       } else {
+  			 	         pages[pointer].modified = 0;   
+  			       }
+  			       pointer = (pointer + 1) % 4;
+	        }
+	        pages[pointer].used = 1;
+    	    pages[pointer].frame = f;
+    	    pointer = (pointer + 1) % 4;
+	    }    
+	    print();
+	}
+
+void write(int f) {
+    bool flag = false;
+    for (int i = pages.size() - 1; i >= 0; i --)
+    	   if (f == pages[i].frame) {
+    	 	     flag = true;
+       		   pages[i].used = 1;
+         	  pages[i].modified = 1;
+          	 cout << "write " << f << " hit" << endl;   
+    	   }    
+	   if (!flag) {
+	 	     cout << "write " << f << " miss" << endl;
+   		   while (pages[pointer].used || pages[pointer].modified) {
+  	   		    if (pages[pointer].used) {
+  			 	         pages[pointer].used = 0;
+  			       } else {
+  			 	         pages[pointer].modified = 0;   
+  			       }
+  			       pointer = (pointer + 1) % 4;
+	       }
+	       pages[pointer].used = 1;
+   	    pages[pointer].modified = 1;
+   	    pages[pointer].frame = f;
+   	    pointer = (pointer + 1) % 4;
+	   }
+	   print();
+} 
+
+int main() {
+   	Page p(0, 0, 1);
+   	pages.push_back(p);
+   	p.frame = 2;
+   	pages.push_back(p);
+   	p.frame = 3;
+   	pages.push_back(p);
+   	p.frame = 4;
+   	pages.push_back(p);
+   	pointer = 0;
+   	read(3);
+   	write(1);
+   	read(4);
+   	write(2);
+   	read(5);
+   	read(2);
+   	write(1);
+   	read(2);
+   	read(3);
+   	write(4);
+   	system("pause");
+   	return 0;   
+}    
+
+测试结果如下：
+
+>>>>>>> 790bc39b948c60181c85f58654a11682d075cbe2
 read 3 hit
 0 0 1
 0 0 2
@@ -213,6 +316,11 @@ write 4 miss
 0 0 3
 0 0 1
 1 1 4
+<<<<<<< HEAD
+=======
+
+经验证，以上结果正确。
+>>>>>>> 790bc39b948c60181c85f58654a11682d075cbe2
 ```
  
 ## 扩展思考题

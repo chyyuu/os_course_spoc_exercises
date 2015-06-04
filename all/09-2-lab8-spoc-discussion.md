@@ -48,6 +48,28 @@
 1. (spoc) 理解文件访问的执行过程，即在ucore运行过程中通过`cprintf`函数来完整地展现出来读一个文件在ucore中的整个执行过程，(越全面细致越好)
 完成代码填写，并形成spoc练习报告，需写练习报告和简单编码，完成后放到git server 对应的git repo中
 
+> 在syscall、sys_open、sysfile_open、file_open、fd_array_alloc、vfs_open、vop_open、sfs_lookup、sfs_lookup_once、sfs_dirent_search_nolock、sfs_rbuf、ide_read_secs函数中增加输出信息。
+运行make qemu之后，输入 hello，可以看到从syscall到ide_read读扇区的输出信息:
+```
+user sh is running!!!$ hello
+2:syscall!
+3: sys_open!
+4: sysfile_open!
+5:file_open/n5:fd_array_alloc!
+6 : vfs_open
+7: vfs_lookup
+9: sfs_lookup!
+9: sfs_lookup_once
+9: sfs_dirent_search_nolock!
+10: sfs_rbuf!
+10: ide_read_secs
+10: sfs_rbuf!
+10: ide_read_secs
+10: sfs_rbuf!
+10: ide_read_secs
+...
+```
+
 2. （spoc） 在下面的实验代码的基础上，实现基于文件系统的pipe IPC机制
 
 ### 练习用的[lab8 spoc exercise project source code](https://github.com/chyyuu/ucore_lab/tree/master/labcodes_answer/lab8_result)

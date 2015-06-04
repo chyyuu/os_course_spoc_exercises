@@ -1,6 +1,7 @@
 # lab3 SPOC思考题
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 NOTICE
 - 有"w5l2"标记的题是助教要提交到学堂在线上的。
 - 有"w5l2"和"spoc"标记的题是要求拿清华学分的同学要在实体课上完成，并按时提交到学生对应的git repo上。
@@ -11,6 +12,8 @@ NOTICE
 =======
 # lab3 SPOC思考题
 
+=======
+>>>>>>> 790bc39b948c60181c85f58654a11682d075cbe2
 NOTICE
 - 有"w5l2"标记的题是助教要提交到学堂在线上的。
 - 有"w5l2"和"spoc"标记的题是要求拿清华学分的同学要在实体课上完成，并按时提交到学生对应的git repo上。
@@ -155,6 +158,7 @@ assertion failed: (ptep = get_pte(boot_pgdir, 0x0, 0)) != NULL
 使用语句为：asm volatile ("ljmp $0x0, $0x1111"); 结果出现General Protection
 
 trapframe at 0xc011ef34
+<<<<<<< HEAD
 edi  0x00000001
 esi  0x00000000
 ebp  0xc011ef88
@@ -174,6 +178,27 @@ cs   0x----0008
 flag 0x00000086 PF,SF,IOPL=0
 kernel panic at kern/trap/trap.c:221:
 unexpected trap in kernel.
+=======
+  edi  0x00000001
+  esi  0x00000000
+  ebp  0xc011ef88
+  oesp 0xc011ef54
+  ebx  0x00010094
+  edx  0xc010a39f
+  ecx  0x00000000
+  eax  0x0000001e
+  ds   0x----0010
+  es   0x----0010
+  fs   0x----0023
+  gs   0x----0023
+  trap 0x0000000d General Protection
+  err  0x00000000
+  eip  0xc0107919
+  cs   0x----0008
+  flag 0x00000086 PF,SF,IOPL=0
+kernel panic at kern/trap/trap.c:221:
+    unexpected trap in kernel.
+>>>>>>> 790bc39b948c60181c85f58654a11682d075cbe2
 
 1.段访问越界
 硬件处理过程：检查访问地址是否越界->越界，产生异常->装入异常相关信息->查中断向量表->跳转到中断程序执行。
@@ -191,4 +216,7 @@ OS处理过程：收集错误信息->报告错误->关闭相应进程
 硬件处理过程：查TLB相应页表项->不存在，产生异常->装入异常相关信息->查中断向量表->跳转到中断程序执行。
 OS处理过程：检查页面是否存在->存在，检查页面是否已映射到物理内存->若已映射，则更新TLB并返回；若尚未映射，则依据一些算法将页面换入映射，然后更新TLB并返回。
 ```
+<<<<<<< HEAD
 
+=======
+>>>>>>> 790bc39b948c60181c85f58654a11682d075cbe2

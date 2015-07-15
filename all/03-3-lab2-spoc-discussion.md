@@ -86,7 +86,7 @@ WRITABLE：1表示可写，0表示只读
 VLAID：1表示有效，0表示无效
 ```
 
-假设ucore OS已经为此机器设置好了针对如下虚拟地址<-->物理地址映射的二级页表，设置了页目录基址寄存器（page directory base register，PDBR）保存了页目录表的物理地址（按页对齐），其值为0。已经建立好了从物理地址0x1000~0x41000的二级页表，且页目录表的index为0x300~0x363的页目录项的(PT19 ... PT0)的值=(index-0x300+1)。
+假设ucore OS已经为此机器设置好了针对如下虚拟地址<-->物理地址映射的二级页表，设置了页目录基址寄存器（page directory base register，PDBR）保存了页目录表的物理地址（按页对齐），其值为0。已经建立好了从0x1000~41000的二级页表，且页目录表的index为0x300~0x363的页目录项的(PT19 ... PT0)的值=(index+1)。
 请写出一个translation程序（可基于python, ruby, C, C++，LISP等），输入是一个虚拟地址和一个物理地址，能够自动计算出对应的页目录项的index值,页目录项内容的值，页表项的index值，页表项内容的值。即(pde_idx, pde_ctx, pte_idx, pte_cxt)
 
 请用如下值来验证你写的程序的正确性：
@@ -108,9 +108,36 @@ va 0xce6c3f32, pa 0x007d4f32
 va 0xcd82c07c, pa 0x0c20907c, pde_idx 0x00000336, pde_ctx  0x00037003, pte_idx 0x0000002c, pte_ctx  0x0000c20b
 ```
 
-- [x]  
+> 代码如下：
 
-> 
+```
+
+def translate(va, pa):
+    print "va 0x%08x, pa 0x%08x," % (va, pa),
+    pde_idx = va >> 22
+    pde_ctx = ((pde_idx + 1) << 12) | 0x3
+    pte_idx = (va >> 12) & 0x3ff
+    pte_ctx = (pa & 0xfffff000) | 0x3
+    print "pde_idx 0x%08x, pde_ctx 0x%08x," % (pde_idx, pde_ctx),
+    print "pte_idx 0x%08x, pte_ctx 0x%08x" % (pte_idx, pte_ctx)
+
+test_data = [
+    [0xc2265b1f, 0x0d8f1b1f],
+    [0xcc386bbc, 0x0414cbbc],
+    [0xc7ed4d57, 0x07311d57],
+    [0xca6cecc0, 0x0c9e9cc0],
+    [0xc18072e8, 0x007412e8],
+    [0xcd5f4b3a, 0x06ec9b3a],
+    [0xcc324c99, 0x0008ac99],
+    [0xc7204e52, 0x0b8b6e52],
+    [0xc3a90293, 0x0f1fd293],
+    [0xce6c3f32, 0x007d4f32],
+]
+
+for input in test_data:
+    translate(input[0], input[1])
+
+```
 
 ---
 

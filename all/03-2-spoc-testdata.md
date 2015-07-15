@@ -1,7 +1,7 @@
 #03-2-spoc-discussion.md 的问题文件
 有一台假想的计算机，页大小（page size）为32 Bytes，支持32KB的虚拟地址空间（virtual address space）,有4KB的物理内存空间（physical memory），采用二级页表，一个页目录项（page directory entry ，PDE）大小为1 Byte,一个页表项（page-table entries， PTEs）大小为1 Byte，1个页目录表大小为32 Bytes，1个页表大小为32 Bytes。页目录基址寄存器（page directory base register，PDBR）保存了页目录表的物理地址（按页对齐），其值为0x220（十进制为544），
 
-4KB的物理内存布局和具体值如下：
+32KB的物理内存布局和具体值如下：
 ```
 page 00: 7f 7f 7f 7f 7f 7f b2 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 7f 
 page 01: 01 19 1d 11 05 1a 1e 15 0f 0b 0a 06 14 0d 06 03 14 09 0f 0a 1b 1b 00 06 0a 1e 18 0a 06 14 19 1c 

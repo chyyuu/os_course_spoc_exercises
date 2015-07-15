@@ -35,6 +35,43 @@ time ./goodlocality
 ```
 可以看到其执行时间。
 
+> 修改后代码如下(数组访问时交换i、j次序)：
+
+```
+#include <stdio.h>
+
+#define NUM 1024
+#define COUNT 10
+int A[NUM][NUM];
+
+void main (void) {
+	int i,j,k;
+	for (k = 0; k<COUNT; k++)
+		for (i = 0; i < NUM; i++)
+			for (j = 0; j  < NUM; j++)
+				A[j][i] = i+j;
+	printf("%d count computing over!\n", i*j*k);
+}
+```
+> 修改前运行结果：
+
+```
+10485760 count computing over!
+
+real	0m0.051s
+user	0m0.043s
+sys	0m0.008s
+```
+> 修改后运行结果如下：
+
+```
+10485760 count computing over!
+
+real	0m0.297s
+user	0m0.292s
+sys	0m0.004s
+```
+
 ## 小组思考题目
 ----
 
@@ -118,10 +155,30 @@ Virtual Address 1e6f(0 001_11 10_011 0_1111):
            0d 15 0a 1a 0c 12 1e 11 0e 02 1d 10 15 14 07 13
       --> To Disk Sector Address 0x2cf(0001011001111) --> Value: 1c
 ```
+> 结果如下：
+
+```
+Virtual Address  0x6653
+pde index:  0xd99  pde content: (valid  0 , pfn  0x7f ) 
+--> Fault (page directory entry not valid)
+Virtual Address  0x1c13
+pde index:  0xd87  pde content: (valid  1 , pfn  0x3d ) 
+pte index:  0x7a0  pte content: (valid  1 , pfn  0x76 ) 
+--> Translates to Physical Address  0xed3  --> Value:  12
+Virtual Address  0x6890
+pde index:  0xd9a  pde content: (valid  0 , pfn  0x7f ) 
+--> Fault (page directory entry not valid)
+Virtual Address  0xaf6
+pde index:  0xd82  pde content: (valid  1 , pfn  0x21 ) 
+pte index:  0x437  pte content: (valid  0 , pfn  0x7f ) 
+--> To Disk Sector Address  4086  --> Value:  03
+Virtual Address  0x1e6f
+pde index:  0xd87  pde content: (valid  1 , pfn  0x3d ) 
+pte index:  0x7b3  pte content: (valid  0 , pfn  0x16 ) 
+--> To Disk Sector Address  719  --> Value:  1c
+```
+
 
 ## 扩展思考题
 ---
 (1)请分析原理课的缺页异常的处理流程与lab3中的缺页异常的处理流程（分析粒度到函数级别）的异同之处。
-
-(2)在X86-32虚拟页式存储系统中，假定第一级页表的起始地址是0xE8A3 B000，进程地址空间只有第一级页表的4KB在内存。请问这4KB的虚拟地址是多少？它对应的第一级页表项和第二级页表项的物理地址是多少？页表项的内容是什么？
-

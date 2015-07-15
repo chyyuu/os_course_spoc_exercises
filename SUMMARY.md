@@ -4,6 +4,20 @@
 * [Intro](all/1-intro.md)
     * [问卷](all/01-1-questionnaire.md)
     * [lec0 SPOC讨论](all/01-2-spoc-discussion.md)
+<<<<<<< HEAD
+    * [lab0 SPOC讨论](all/01-3-lab0-spoc-discussion.md)
+* [中断、异常和系统调用](all/2-intr.md)
+    * [lab1 SPOC讨论](all/02-2-lab1-spoc-discussion.md)
+* [物理内存管理](all/3&4-pmm.md)
+* [虚拟内存管理](all/5&6-vmm.md)
+* [进程、线程管理](all/7-process&thread.md)
+* [CPU调度](all/8-sched.md)
+* [同步](all/9-sync.md)
+* [信号量](all/10-sem.md)
+* [死锁和进程间通信](all/11-deadlock.md)
+* [文件系统](all/12-filesystem.md)
+* [I/O子系统](all/13-io.md)
+=======
     * [lab0 在线练习](all/01-3-lab0-quiz.md)
     * [lab0 SPOC讨论](all/01-3-lab0-spoc-discussion.md)
 * [中断、异常和系统调用](all/2-intr.md)
@@ -55,4 +69,5 @@
 * [I/O子系统](all/13-io.md)
     * [lec23 在线练习](all/10-1-quiz.md)
     * [lec23 SPOC讨论](all/10-1-spoc-discussion.md)
+>>>>>>> fork/master
 

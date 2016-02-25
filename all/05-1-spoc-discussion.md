@@ -152,3 +152,5 @@ Time     PID: 0     PID: 1
  10     RUN:yld      READY 
  11     RUNNING       DONE 
 ```
+
+> 补充完整的代码见[process-concept-homework.py](https://github.com/OneSida/ucore_lab/blob/master/related_info/lab4/process-concept-homework.py)。执行样例的结果与以上结果一致。

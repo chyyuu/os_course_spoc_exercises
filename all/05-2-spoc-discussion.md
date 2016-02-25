@@ -124,3 +124,5 @@ Time     PID: 0     PID: 1        CPU        IOs
  12     RUN:cpu       DONE          1            
  13     RUN:yld       DONE          1            
 ```
+
+> 补充完整的代码见[process-cpuio-homework.py](https://github.com/OneSida/ucore_lab/blob/master/related_info/lab5/process-cpuio-homework.py)。执行样例的结果与以上结果一致。

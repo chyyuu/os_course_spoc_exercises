@@ -19,6 +19,14 @@
 
 ## 3.1 BIOS
  1. 比较UEFI和BIOS的区别。
+    与legacy BIOS 相比，UEFI最大的几个区别在于：
+    1) 编码99%都是由C语言完成；
+    2) 一改之前的中断、硬件端口操作的方法，而采用了Driver/protocol的新方式；
+    3) 将不支持X86实模式，而直接采用Flat mode（也就是不能用DOS了，现在有些 EFI 或 UEFI 能用是因为做了兼容，但实际上这部分不属于UEFI的定义了）；
+    4) 输出也不再是单纯的二进制code，改为Removable Binary Drivers；
+    5) OS启动不再是调用Int19，而是直接利用protocol/device Path；
+    6) 对于第三方的开发，前者基本上做不到，除非参与BIOS的设计，但是还要受到ROM的大小限制，而后者就便利多了。
+    7) 弥补BIOS对新硬件的支持不足的问题。
  1. 描述PXE的大致启动流程。
 
 ## 3.2 系统启动流程

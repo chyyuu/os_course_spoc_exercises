@@ -1,5 +1,20 @@
 #lec 3 SPOC Discussion
 
+##**提前准备**
+（请在周一上课前完成）
+
+ - 完成lec3的视频学习和提交对应的在线练习
+ - git pull ucore_os_lab, v9_cpu, os_course_spoc_exercises  　in github repos。这样可以在本机上完成课堂练习。
+ - 仔细观察自己使用的计算机的启动过程和linux/ucore操作系统运行后的情况。
+ - 了解控制流，异常控制流，函数调用,中断，异常(故障)，系统调用（陷阱）,切换，用户态（用户模式），内核态（内核模式）等基本概念。思考一下这些基本概念在linux, ucore, v9-cpu中的os*.c中是如何具体体现的。
+ - 思考为什么操作系统需要处理中断，异常，系统调用。这些是必须要有的吗？有哪些好处？有哪些不好的地方？
+ - 了解在PC机上有啥中断和异常。搜索“80386　开机　启动”
+ - 安装好ucore实验环境，能够编译运行lab8的answer
+ - 了解Linux和ucore有哪些系统调用。搜索“linux 系统调用", 搜索lab8中的syscall关键字相关内容。在linux下执行命令: ```man syscalls```
+ - 会使用linux中的命令:objdump，nm，file, strace，man, 了解这些命令的用途。
+ - 了解如何OS是如何实现中断，异常，或系统调用的。会使用v9-cpu的dis,xc, xem命令（包括启动参数），分析v9-cpu中的os0.c, os2.c，了解与异常，中断，系统调用相关的os设计实现。阅读v9-cpu中的cpu.md文档，了解汇编指令的类型和含义等，了解v9-cpu的细节。
+ - 在piazza上就lec3学习中不理解问题进行提问。
+
 ## 第三讲 启动、中断、异常和系统调用-思考题
 
 ## 3.1 BIOS

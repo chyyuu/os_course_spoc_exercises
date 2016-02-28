@@ -1,9 +1,15 @@
 # 操作系统概述
 ---
-## 使用在线平台
-- http://166.111.68.197:11123/oscourse/OS2016spring
 
-## 了解学习方法
+##**提前准备**
+（请在上课前完成）
+
+ - 完成lec1的视频学习和提交对应的在线练习
+ - git pull ucore_os_lab, v9_cpu, os_course_spoc_exercises  　in github repos。这样可以在本机上完成课堂练习。
+ - 知道OS课程的入口网址，会使用在线视频平台，在线练习/实验平台，在线提问平台(piazza)
+   - http://166.111.68.197:11123/oscourse/OS2016spring
+ - 了解学习方法
+
 ```
   for (i=1; i<=13; i++) {
     1. 完成第i周课前视频学习
@@ -15,13 +21,11 @@
     7. if (碰到问题)　到piazza的论坛上提问;
    }
 ```
-## 了解学生对视频学习的情况
-
-## 介绍v9-cpu
+ - 会使用linux shell命令，如ls, rm, mkdir, cat, less, more, gcc等，也会使用linux系统的基本操作。
+ - 了解v9-cpu,会使用v9-cpu的dis,xc, xem命令（包括启动参数）,阅读v9-cpu中的cpu.md文档，了解汇编指令的类型和含义等，了解v9-cpu的细节。
  - https://github.com/chyyuu/v9-cpu/blob/master/doc/cpu.md
 
-## 课堂练习
-　- 提交到piazza上
+ - 在piazza上就学习中不理解问题进行提问。
 
 # 操作系统概述思考题
 ---

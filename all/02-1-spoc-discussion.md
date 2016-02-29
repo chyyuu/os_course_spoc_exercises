@@ -117,13 +117,6 @@
 
  ucore的系统调用大概有二十几个，ucore系统调用的主要分类有文件操作、进程管理、内存管理等。
 
-  + 采分点：说明了ucore的大致数量（二十几个），说明了ucore系统调用的主要分类（文件操作，进程管理，内存管理等）
-  - 答案没有涉及上述两个要点；（0分）
-  - 答案对上述两个要点中的某一个要点进行了正确阐述（1分）
-  - 答案对上述两个要点进行了正确阐述（2分）
-  - 答案除了对上述两个要点都进行了正确阐述外，还进行了扩展和更丰富的说明（3分）
- ```
- 
 ## 3.4 linux系统调用分析
  1. 通过分析[lab1_ex0](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex0.md)了解Linux应用的系统调用编写和含义。(w2l1)
  
@@ -137,7 +130,7 @@
  
  ```
  
- 1. 通过调试[lab1_ex1](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex1.md)了解Linux应用的系统调用执行过程。(w2l1)
+ 2. 通过调试[lab1_ex1](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex1.md)了解Linux应用的系统调用执行过程。(w2l1)
  
 
  ```
@@ -150,11 +143,28 @@
  
 ## 3.5 ucore系统调用分析
  1. ucore的系统调用中参数传递代码分析。
- 1. ucore的系统调用中返回结果的传递代码分析。
- 1. 以ucore lab8的answer为例，分析ucore 应用的系统调用编写和含义。
- 1. 以ucore lab8的answer为例，尝试修改并运行ucore OS kernel代码，使其具有类似Linux应用工具`strace`的功能，即能够显示出应用程序发出的系统调用，从而可以分析ucore应用的系统调用执行过程。
+ 2. 以getpid为例，分析ucore的系统调用中返回结果的传递代码。
+ 3. 以ucore lab8的answer为例，分析ucore 应用的系统调用编写和含义。
+ 4. 以ucore lab8的answer为例，尝试修改并运行ucore OS kernel代码，使其具有类似Linux应用工具`strace`的功能，即能够显示出应用程序发出的系统调用，从而可以分析ucore应用的系统调用执行过程。
  
 ## 3.6 请分析函数调用和系统调用的区别
  1. 请从代码编写和执行过程来说明。
    1. 说明`int`、`iret`、`call`和`ret`的指令准确功能
  
+
+## v9-cpu相关题目
+---
+
+### 提前准备
+```
+cd YOUR v9-cpu DIR
+git pull 
+cd YOUR os_course_spoc_exercise DIR
+git pull 
+```
+
+### v9-cpu系统调用实现
+  1. v9-cpu中os4.c的系统调用中参数传递代码分析。
+  1. v9-cpu中os4.c的系统调用中返回结果的传递代码分析。
+  1. 理解v9-cpu中os4.c的系统调用编写和含义。
+

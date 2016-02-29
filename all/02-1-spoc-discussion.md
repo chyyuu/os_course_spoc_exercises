@@ -137,7 +137,14 @@
  
 6. 以ucore lab8的answer为例，uCore的系统调用有哪些？大致的功能分类有哪些？(w2l1)
 
- ucore的系统调用大概有二十几个，ucore系统调用的主要分类有文件操作、进程管理、内存管理等。
+ucore的系统调用有22个。 可见syscall/syscall.c
+具体为：
+SYS_exit  SYS_fork SYS_wait SYS_exec SYS_yield SYS_kill SYS_getpid SYS_putc SYS_pgdir SYS_gettime SYS_lab6_set_priority SYS_sleep SYS_open SYS_close SYS_read
+SYS_write SYS_seek SYS_fstat SYS_fsync SYS_getcwd SYS_getdirentry SYS_dup
+ucore的功能分类主要有：
+进程控制 exit fork wait exec yield kill getpid sleep lab6_set_priority 
+文件系统控制 pgdir open close read wirte seek fstat fsync getcwd getdirentry dup
+系统控制 gettime putc
 
 ## 3.4 linux系统调用分析
  1. 通过分析[lab1_ex0](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex0.md)了解Linux应用的系统调用编写和含义。(w2l1)

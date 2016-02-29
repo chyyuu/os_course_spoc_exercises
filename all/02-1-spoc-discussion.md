@@ -93,6 +93,28 @@
     中断：敲键盘
     异常：除0，访问无效地址
 4. 以ucore lab8的answer为例，uCore的系统调用有哪些？大致的功能分类有哪些？(w2l1) 
+
+  __alltraps:
+    # push registers to build a trap frame
+    # therefore make the stack look like a struct trapframe
+    pushl %ds
+    pushl %es
+    pushl %fs
+    pushl %gs
+    pushal
+    # load GD_KDATA into %ds and %es to set up data segments for kernel
+    movl $GD_KDATA, %eax
+    movw %ax, %ds
+    movw %ax, %es
+    # push %esp to pass a pointer to the trapframe as an argument to trap()
+    pushl %esp
+    接着调用trap()函数。
+    call trap
+    trap()函数中调用trap_dispatch(),根据不同类型的中断来处理
+    时钟中断的处理如下：
+    ticks ++;
+    assert(current != NULL);
+    run_timer_list();
 5. Linux的系统调用有哪些？大致的功能分类有哪些？  (w2l1)
 
     linux的系统调用大约有250个。系统调用的功能分类如下：
@@ -113,7 +135,7 @@
   - 答案除了对上述两个要点都进行了正确阐述外，还进行了扩展和更丰富的说明（3分）
  ```
  
- 6. 以ucore lab8的answer为例，uCore的系统调用有哪些？大致的功能分类有哪些？(w2l1)
+6. 以ucore lab8的answer为例，uCore的系统调用有哪些？大致的功能分类有哪些？(w2l1)
 
  ucore的系统调用大概有二十几个，ucore系统调用的主要分类有文件操作、进程管理、内存管理等。
 

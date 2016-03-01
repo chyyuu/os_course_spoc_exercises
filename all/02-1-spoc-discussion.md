@@ -58,8 +58,8 @@ I/O中断 ，
 编程异常 （Programmed exception)在编程者发出请求是发生。是由int 或(int3)指令时触
 
  1. Linux的系统调用有哪些？大致的功能分类有哪些？  (w2l1)
-Linux系统调用非常精简（只有250个左右），它继承了UNIX系统调用中最基本和最有用的部分。这些系统调用按照功能逻辑大致可分为进程管理（进程控制、进程间通信)、文件系统控制、存储管理、网络管理、套接字（socket）控制、用户管理，等几类。
 
+Linux系统调用非常精简（只有250个左右），它继承了UNIX系统调用中最基本和最有用的部分。这些系统调用按照功能逻辑大致可分为进程管理（进程控制、进程间通信)、文件系统控制、存储管理、网络管理、套接字（socket）控制、用户管理，等几类。
 ```
   + 采分点：说明了Linux的大致数量（上百个），说明了Linux系统调用的主要分类（文件操作，进程管理，内存管理等）
   - 答案没有涉及上述两个要点；（0分）
@@ -107,10 +107,63 @@ strace一般用来跟踪进程执行时的系统调用和所接收的信号,使�
  
 ## 3.5 ucore系统调用分析
  1. ucore的系统调用中参数传递代码分析。
- 1. ucore的系统调用中返回结果的传递代码分析。
- 1. 以ucore lab8的answer为例，分析ucore 应用的系统调用编写和含义。
- 1. 以ucore lab8的answer为例，尝试修改并运行代码，分析ucore应用的系统调用执行过程。
  
+void syscall(void) {
+    struct trapframe *tf = current->tf;
+    uint32_t arg[5];
+    int num = tf->tf_regs.reg_eax;
+    if (num >= 0 && num < NUM_SYSCALLS) {
+        if (syscalls[num] != NULL) {
+            // 寄存器之前都已入堆栈，读取堆栈中的参数
+            arg[0] = tf->tf_regs.reg_edx;
+            arg[1] = tf->tf_regs.reg_ecx;
+            arg[2] = tf->tf_regs.reg_ebx;
+            arg[3] = tf->tf_regs.reg_edi;
+            arg[4] = tf->tf_regs.reg_esi;
+            // 结果存到寄存器a对应的堆栈中，系统调用结束时堆栈结果恢复到寄存器，返回结果到寄存器a
+            tf->tf_regs.reg_eax = syscalls[num](arg);
+            return ;
+        }
+    }
+    print_trapframe(tf);
+    panic("undefined syscall %d, pid = %d, name = %s.\n",
+            num, current->pid, current->name);
+}
+
+
+ 1. ucore的系统调用中返回结果的传递代码分析。
+ 
++    syscall中sys_getpid返回pid给 结果存到堆栈中对应寄存器a的位置 返回应用程序的时候，堆栈结果恢复到寄存器，结果存到寄存器a中
+
+ 1. 以ucore lab8的answer为例，分析ucore 应用的系统调用编写和含义。
+ 
+    [SYS_exit]          //退出进程
+    [SYS_fork]          //复制创建子进程
+    [SYS_wait]          //等待进程结束
+    [SYS_exec]          //加载其他可执行程序
+    [SYS_yield]         //让出CPU时间
+    [SYS_kill]          //删除进程
+    [SYS_getpid]        //获得进程号
+    [SYS_putc]          //输出一个字节
+    [SYS_pgdir]         //返回页目录起始地址
+    [SYS_gettime]       //获得时间
+    [SYS_lab6_set_priority]  //设置优先级
+    [SYS_sleep]         //睡眠
+    [SYS_open]          //打开文件
+    [SYS_close]         //关闭文件
+    [SYS_read]          //读输入
+    [SYS_write]         //写输出
+    [SYS_seek]          //查找
+    [SYS_fstat]         //查询文件信息
+    [SYS_fsync]         //将缓存协会磁盘
+    [SYS_getcwd]        //获得当前工作目录
+    [SYS_getdirentry]   //获得文件描述符对应的目录信息
+    [SYS_dup]           //复制文件描述符
+
+ 1. 以ucore lab8的answer为例，尝试修改并运行代码，分析ucore应用的系统调用执行过程。
+
+ 在syscall()函数中加一个输出
+
 ## 3.6 请分析函数调用和系统调用的区别
  1. 请从代码编写和执行过程来说明。
    1. 说明`int`、`iret`、`call`和`ret`的指令准确功能

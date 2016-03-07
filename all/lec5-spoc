@@ -1,0 +1,130 @@
+请简要分析最优匹配，最差匹配，最先匹配，buddy systemm分配算法的优势和劣势，并尝试提出一种更有效的连续内存分配算法 (w3l1)
+```
+  + 采分点：说明四种算法的优点和缺点
+  - 答案没有涉及如下3点；（0分）
+  - 正确描述了二种分配算法的优势和劣势（1分）
+  - 正确描述了四种分配算法的优势和劣势（2分）
+  - 除上述两点外，进一步描述了一种更有效的分配算法（3分）
+ ```
+- [x]  
+
+> 
+最优匹配算法：优势：在分配的尺寸比较小的时候，可以避免那些大的空闲分区被拆分，减少了外部碎片的大小，相对简单，效果比较好。
+              缺点：产生了外部碎片，容易产生较多的小碎片，释放分区较慢。
+最差匹配算法： 优点： 在分配的尺寸中等时，可以避免出现太多的小碎片，效果较好。
+               缺点：释放分区较慢，产生外部碎片，容易破坏大的空闲分区，不利于后续分配大的分区。
+最先匹配算法： 优点： 比较简单，在高地址空间有大块的空闲分区
+               缺点：产生了外部碎片，分配尺寸较大时速度较慢。
+buddy system分配算法：优点：分配效率高，还可回收内存，避免内存碎片的产生，提高了物理内存的利用率， 
+              缺点：实现较为复杂。
+
+## 小组思考题
+
+请参考ucore lab2代码，采用`struct pmm_manager` 根据你的`学号 mod 4`的结果值，选择四种（0:最优匹配，1:最差匹配，2:最先匹配，3:buddy systemm）分配算法中的一种或多种，在应用程序层面(可以 用python,ruby,C++，C，LISP等高语言)来实现，给出你的设思路，并给出测试用例。 (spoc)
+
+>
+思路将最先匹配的思路改为遍历全部空闲块并取出最大一块，实现最差匹配。参考umlloc.c
+>
+#include <stdio.h>
+#include <unistd.h>
+
+typedef long Align;
+
+union header {
+  struct {
+    union header *ptr;
+    unsigned int size;
+  } s;
+  Align x;
+};
+
+typedef union header Header;
+
+static Header base;
+static Header *freep;
+
+void
+ufree(void *ap)
+{
+  Header *bp, *p;
+
+  bp = (Header*)ap - 1;
+  for(p = freep; !(bp > p && bp < p->s.ptr); p = p->s.ptr)
+    if(p >= p->s.ptr && (bp > p || bp < p->s.ptr))
+      break;
+  if(bp + bp->s.size == p->s.ptr){
+    bp->s.size += p->s.ptr->s.size;
+    bp->s.ptr = p->s.ptr->s.ptr;
+  } else
+    bp->s.ptr = p->s.ptr;
+  if(p + p->s.size == bp){
+    p->s.size += bp->s.size;
+    p->s.ptr = bp->s.ptr;
+  } else
+    p->s.ptr = bp;
+  freep = p;
+}
+
+static Header*
+morecore(unsigned int nu)
+{
+  char *p;
+  Header *hp;
+
+  if(nu < 4096)
+    nu = 4096;
+  p = sbrk(nu * sizeof(Header));
+  if(p == (char*)-1)
+    return 0;
+  hp = (Header*)p;
+  hp->s.size = nu;
+  ufree((void*)(hp + 1));
+  return freep;
+}
+
+void*
+umalloc(unsigned int nbytes)
+{
+  Header *p, *prevp;
+  unsigned int nunits;
+
+  nunits = (nbytes + sizeof(Header) - 1)/sizeof(Header) + 1;
+  while (1) {
+    if((prevp = freep) == 0){
+      base.s.ptr = freep = prevp = &base;
+      base.s.size = 0;
+    }
+    unsigned int max = 0;
+    Header *q = NULL, *prevq = NULL;
+    for(p = prevp->s.ptr; p != freep; prevp = p, p = p->s.ptr){
+      if (max < p->s.size) {
+        max = p->s.size;
+        q = p;
+        prevq = prevp;
+      }
+    }
+    if (q) p = q;
+    if (prevq) prevp = prevq;
+    if(p->s.size >= nunits){
+      if(p->s.size == nunits)
+        prevp->s.ptr = p->s.ptr;
+      else {
+        p->s.size -= nunits;
+        p += p->s.size;
+        p->s.size = nunits;
+      }
+      freep = prevp;
+      return (void*)(p + 1);
+    }
+    else
+      if((p = morecore(nunits)) == 0)
+        return 0;
+  }
+}
+
+int main()
+{
+  void *p = umalloc(10);
+  ufree(p);
+  return 0;
+}

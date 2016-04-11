@@ -18,10 +18,8 @@ struct proc_struct {
     list_entry_t hash_link;                     // Process hash list
 };
 ```
-```
-mm_struct结构: list_entry_t mmap_list struct vma_struct * mmap_cache pde_t * pgdir int map_count void * sm_priv
+>mm_struct结构: list_entry_t mmap_list struct vma_struct * mmap_cache pde_t * pgdir int map_count void * sm_priv
 ### 关键数据结构
-```
 (2) 如何知道ucore的两个线程同在一个进程？
 ```
 看"mm"和"cr3"这两个变量是否相同,不同进程的"mm"和"cr3"分别指向不同的内存空间和页目录基地址，。

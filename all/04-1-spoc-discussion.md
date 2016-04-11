@@ -120,7 +120,6 @@ Virtual Address 1e6f(0 001_11 10_011 0_1111):
 ```
 #### 程序
 
-[代码 convert.py](convert.py)
 
 ```python
 PDE_BASE = 0xd80

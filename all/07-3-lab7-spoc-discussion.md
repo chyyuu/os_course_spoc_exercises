@@ -57,9 +57,10 @@
 
 2. （扩展练习）请在lab7-answer中分析
   -  cvp->count含义是什么？cvp->count是否可能<0, 是否可能>1？请举例或说明原因。
-  -      cvp->count含义是等待条件变量cvp的进程/线程数目。
-  -      cvp->count不可能小于零，因为所有cvp->count的增加都在对应的减少操作之前，而程序执行的顺序是固定的，与同步互斥无关。
-  -      cvp->count可能大于1，如多个进程等待同一个信号量。
+  -  
+  -  >    cvp->count含义是等待条件变量cvp的进程/线程数目。
+  -  >    cvp->count不可能小于零，因为所有cvp->count的增加都在对应的减少操作之前，而程序执行的顺序是固定的，与同步互斥无关。
+  -  >    cvp->count可能大于1，如多个进程等待同一个信号量。
   -  cvp->owner->next_count含义是什么？cvp->owner->next_count是否可能<0, 是否可能>1？请举例或说明原因。
   -  目前的lab7-answer中管程的实现是Hansen管程类型还是Hoare管程类型？请在lab7-answer中实现另外一种类型的管程。
   -  现在的管程（条件变量）实现是否有bug?

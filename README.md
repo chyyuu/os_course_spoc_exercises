@@ -1,12 +1,12 @@
-# OS课程练习
-这里的习题用于清华大学计算机系2017年春季课程练习。
+# OS 课程练习
+这里的习题用于清华大学计算机系 2017 年春季课程练习。
 
 
-这里包括从互联网上搜集的操作系统课程相关习题和答案，包括部分考研试题，版权属于各出题单位或个人。由清华大学OS课的老师和助教撰写的习题和答案的文档版权属于陈渝、向勇，并采用 Creative Commons Attribution/Share-Alike (CC-BY-SA) License.
+这里包括从互联网上搜集的操作系统课程相关习题和答案，包括部分考研试题，版权属于各出题单位或个人。由清华大学 OS 课的老师和助教撰写的习题和答案的文档版权属于陈渝、向勇，并采用 Creative Commons Attribution/Share-Alike (CC-BY-SA) License.
 
-OS习题集采用gitbook的方式展现，可进行在线交互式答题。
+OS 习题集采用 gitbook 的方式展现，可进行在线交互式答题。
 
-下面是gitbook提供的试题编写的例子：
+下面是 gitbook 提供的试题编写的例子：
 ## mcqx test1
 
 {%mcq ans="o1"%}
